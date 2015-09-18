@@ -66,12 +66,14 @@
             // 
             // toggleStatusButton
             // 
+            this.toggleStatusButton.Enabled = false;
             this.toggleStatusButton.Location = new System.Drawing.Point(12, 69);
             this.toggleStatusButton.Name = "toggleStatusButton";
             this.toggleStatusButton.Size = new System.Drawing.Size(120, 25);
             this.toggleStatusButton.TabIndex = 2;
             this.toggleStatusButton.Text = "Start";
             this.toggleStatusButton.UseVisualStyleBackColor = true;
+            this.toggleStatusButton.Click += new System.EventHandler(this.toggleStatusButton_Click);
             // 
             // label2
             // 
@@ -121,6 +123,7 @@
             this.subredditTextBox.Size = new System.Drawing.Size(120, 20);
             this.subredditTextBox.TabIndex = 7;
             this.subredditTextBox.Text = "anime";
+            this.subredditTextBox.TextChanged += new System.EventHandler(this.subredditTextBox_TextChanged);
             // 
             // label4
             // 
