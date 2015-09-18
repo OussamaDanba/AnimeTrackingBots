@@ -89,8 +89,9 @@
             this.chosenDBLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.chosenDBLabel.Location = new System.Drawing.Point(162, 39);
             this.chosenDBLabel.Name = "chosenDBLabel";
-            this.chosenDBLabel.Size = new System.Drawing.Size(0, 13);
+            this.chosenDBLabel.Size = new System.Drawing.Size(33, 13);
             this.chosenDBLabel.TabIndex = 4;
+            this.chosenDBLabel.Text = "None";
             // 
             // chooseDBButton
             // 
@@ -100,6 +101,7 @@
             this.chooseDBButton.TabIndex = 5;
             this.chooseDBButton.Text = "Choose database";
             this.chooseDBButton.UseVisualStyleBackColor = true;
+            this.chooseDBButton.Click += new System.EventHandler(this.chooseDBButton_Click);
             // 
             // label3
             // 
