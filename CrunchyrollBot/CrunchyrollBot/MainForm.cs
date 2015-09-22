@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Drawing;
+using RedditSharp;
 using System.Windows.Forms;
 
 namespace CrunchyrollBot
@@ -10,6 +11,7 @@ namespace CrunchyrollBot
         private SQLiteConnection currentDB;
         private Timer updateTimer = new Timer();
         private bool isRunning = false;
+        private Reddit reddit;
 
         public MainForm()
         {
@@ -63,18 +65,51 @@ namespace CrunchyrollBot
             }
             else
             {
-                subredditTextBox.Enabled = chooseDBButton.Enabled = false;
-                statusLabel.Text = "Running";
-                statusLabel.ForeColor = Color.Green;
-                updateTimer.Start();
-                toggleStatusButton.Text = "Stop";
-                isRunning = true;
+                if(redditSetup())
+                {
+                    subredditTextBox.Enabled = chooseDBButton.Enabled = false;
+                    statusLabel.Text = "Running";
+                    statusLabel.ForeColor = Color.Green;
+                    updateTimer.Start();
+                    toggleStatusButton.Text = "Stop";
+                    isRunning = true;
+                }
             }
         }
 
         private void subredditTextBox_TextChanged(object sender, EventArgs e)
         {
             toggleStatusButton.Enabled = !(subredditTextBox.Text == string.Empty) && (currentDB != null);
+        }
+
+        private bool redditSetup()
+        {
+            string username = string.Empty;
+            string password = string.Empty;
+
+            currentDB.Open();
+            SQLiteDataReader redditLogin = new SQLiteCommand(
+                "SELECT * FROM User LIMIT 1", currentDB).ExecuteReader();
+
+            if (redditLogin.Read())
+            {
+                username = redditLogin[0].ToString();
+                password = redditLogin[1].ToString();
+            }
+            currentDB.Close();
+
+            try
+            {
+                reddit = new Reddit(username, password, true);
+                reddit.GetSubreddit("/r/" + subredditTextBox.Text);
+                
+                return true;
+            }
+            catch
+            {
+                errorListBox.Items.Add("Failed reddit login");
+                return false;
+            }
         }
     }
 }
