@@ -56,24 +56,35 @@ namespace CrunchyrollBot
         {
             if (isRunning)
             {
-                subredditTextBox.Enabled = chooseDBButton.Enabled = true;
-                statusLabel.Text = "Not running";
-                statusLabel.ForeColor = Color.Red;
                 updateTimer.Stop();
-                toggleStatusButton.Text = "Start";
                 isRunning = false;
+                setUIStatus(false);
             }
             else
             {
                 if(redditSetup())
                 {
-                    subredditTextBox.Enabled = chooseDBButton.Enabled = false;
-                    statusLabel.Text = "Running";
-                    statusLabel.ForeColor = Color.Green;
                     updateTimer.Start();
-                    toggleStatusButton.Text = "Stop";
                     isRunning = true;
+                    setUIStatus(true);
                 }
+            }
+        }
+
+        private void setUIStatus(bool locked)
+        {
+            subredditTextBox.Enabled = chooseDBButton.Enabled = !locked;
+            if (locked)
+            {
+                statusLabel.Text = "Running";
+                statusLabel.ForeColor = Color.Green;
+                toggleStatusButton.Text = "Stop";
+            }
+            else
+            {
+                statusLabel.Text = "Not running";
+                statusLabel.ForeColor = Color.Red;
+                toggleStatusButton.Text = "Start";
             }
         }
 
