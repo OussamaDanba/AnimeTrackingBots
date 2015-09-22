@@ -107,7 +107,6 @@ namespace CreateDatabase
         static void PopulateDB(SQLiteConnection database)
         {
             database.Open();
-
             
             // Populate the ShowTypes table
             SQLiteCommand insertShowType = new SQLiteCommand(@"
