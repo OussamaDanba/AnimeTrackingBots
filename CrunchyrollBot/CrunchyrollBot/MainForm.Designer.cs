@@ -217,11 +217,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox subredditTextBox;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ListBox recentListBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ListBox errorListBox;
-        private System.Windows.Forms.ListBox threadsListBox;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ListBox threadsListBox;
+        public System.Windows.Forms.ListBox recentListBox;
+        public System.Windows.Forms.ListBox errorListBox;
     }
 }
 
