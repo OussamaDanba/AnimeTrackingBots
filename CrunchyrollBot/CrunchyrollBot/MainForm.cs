@@ -43,6 +43,7 @@ namespace CrunchyrollBot
         {
             if (isRunning)
             {
+                mainLogic.currentDB.Close();
                 mainLogic.updateTimer.Stop();
                 isRunning = false;
                 setUIStatus(false);
@@ -51,6 +52,7 @@ namespace CrunchyrollBot
             {
                 if(mainLogic.redditSetup())
                 {
+                    mainLogic.currentDB.Open();
                     mainLogic.updateTimer.Start();
                     isRunning = true;
                     setUIStatus(true);
@@ -78,6 +80,17 @@ namespace CrunchyrollBot
         private void subredditTextBox_TextChanged(object sender, EventArgs e)
         {
             toggleStatusButton.Enabled = !(subredditTextBox.Text == string.Empty) && (mainLogic.currentDB != null);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Don't allow closing the program while it is running to prevent issues when the program is writing to the database.
+            // Can be overridden by the user when shift is being held.
+            if(isRunning && ModifierKeys != Keys.Shift)
+            {
+                errorListBox.Items.Add("Stop before closing");
+                e.Cancel = true;
+            }
         }
 
         public string getSubreddit()
