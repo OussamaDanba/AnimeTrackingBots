@@ -93,8 +93,11 @@ namespace CreateDatabase
                     BaseURL         TEXT        NOT NULL,
                     PRIMARY KEY (ID, Website, Title));
 
-                -- I hate OAuth
+                -- I hate (reddit) OAuth
                 CREATE TABLE User (
+                    ClientID        TEXT        NOT NULL,
+                    ClientSecret    TEXT        NOT NULL,
+                    RedirectURI     TEXT        NOT NULL,
                     Username        TEXT        NOT NULL,
                     Password        TEXT        NOT NULL)
                 ", database).ExecuteNonQuery();
