@@ -11,6 +11,7 @@ namespace CrunchyrollBot
         public SQLiteConnection currentDB { get; set; }
         public Timer updateTimer = new Timer();
         private Reddit reddit;
+        private RedditSharp.Things.Subreddit subreddit;
 
         public MainLogic(MainForm mainForm)
         {
@@ -33,6 +34,9 @@ namespace CrunchyrollBot
         {
             string username = string.Empty;
             string password = string.Empty;
+            string clientID = string.Empty;
+            string clientSecret = string.Empty;
+            string redirectURI = string.Empty;
 
             currentDB.Open();
             SQLiteDataReader redditLogin = new SQLiteCommand(
@@ -40,15 +44,19 @@ namespace CrunchyrollBot
 
             if (redditLogin.Read())
             {
-                username = redditLogin[0].ToString();
-                password = redditLogin[1].ToString();
+                clientID = redditLogin[0].ToString();
+                clientSecret = redditLogin[1].ToString();
+                redirectURI = redditLogin[2].ToString();
+                username = redditLogin[3].ToString();
+                password = redditLogin[4].ToString();
             }
             currentDB.Close();
 
             try
             {
-                reddit = new Reddit(username, password, true);
-                reddit.GetSubreddit("/r/" + mainForm.getSubreddit());
+                AuthProvider authProvider = new AuthProvider(clientID, clientSecret, redirectURI);
+                reddit = new Reddit(authProvider.GetOAuthToken(username, password));
+                subreddit = reddit.GetSubreddit("/r/" + mainForm.getSubreddit());
 
                 return true;
             }
