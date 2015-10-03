@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Drawing;
-using RedditSharp;
 using System.Windows.Forms;
 
 namespace CrunchyrollBot
@@ -15,6 +14,7 @@ namespace CrunchyrollBot
         {
             InitializeComponent();
             mainLogic = new MainLogic(this);
+            threadsListBox.DataSource = mainLogic.shows;
         }
 
         private void chooseDBButton_Click(object sender, EventArgs e)

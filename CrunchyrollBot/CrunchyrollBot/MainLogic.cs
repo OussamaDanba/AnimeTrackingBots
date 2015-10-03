@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using RedditSharp;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace CrunchyrollBot
@@ -12,10 +13,14 @@ namespace CrunchyrollBot
         public Timer updateTimer = new Timer();
         private Reddit reddit;
         private RedditSharp.Things.Subreddit subreddit;
+        public BindingList<Show> shows;
 
         public MainLogic(MainForm mainForm)
         {
             this.mainForm = mainForm;
+            shows = new BindingList<Show>();
+
+            updateTimer = new Timer();
             // Run the TimerEvent once every second
             updateTimer.Interval = 1000;
             updateTimer.Tick += new EventHandler(TimerEvent);
