@@ -158,22 +158,22 @@
             this.ErrorListBox.FormattingEnabled = true;
             this.ErrorListBox.Location = new System.Drawing.Point(315, 131);
             this.ErrorListBox.Name = "ErrorListBox";
-            this.ErrorListBox.Size = new System.Drawing.Size(120, 147);
+            this.ErrorListBox.Size = new System.Drawing.Size(236, 147);
             this.ErrorListBox.TabIndex = 11;
             // 
             // ThreadsListBox
             // 
             this.ThreadsListBox.FormattingEnabled = true;
-            this.ThreadsListBox.Location = new System.Drawing.Point(441, 40);
+            this.ThreadsListBox.Location = new System.Drawing.Point(557, 40);
             this.ThreadsListBox.Name = "ThreadsListBox";
-            this.ThreadsListBox.Size = new System.Drawing.Size(392, 238);
+            this.ThreadsListBox.Size = new System.Drawing.Size(276, 238);
             this.ThreadsListBox.TabIndex = 12;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(438, 21);
+            this.label6.Location = new System.Drawing.Point(554, 21);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(96, 16);
             this.label6.TabIndex = 13;
