@@ -138,6 +138,7 @@
             // RecentListBox
             // 
             this.RecentListBox.FormattingEnabled = true;
+            this.RecentListBox.HorizontalScrollbar = true;
             this.RecentListBox.Location = new System.Drawing.Point(12, 131);
             this.RecentListBox.Name = "RecentListBox";
             this.RecentListBox.Size = new System.Drawing.Size(297, 147);
@@ -156,6 +157,7 @@
             // ErrorListBox
             // 
             this.ErrorListBox.FormattingEnabled = true;
+            this.ErrorListBox.HorizontalScrollbar = true;
             this.ErrorListBox.Location = new System.Drawing.Point(315, 131);
             this.ErrorListBox.Name = "ErrorListBox";
             this.ErrorListBox.Size = new System.Drawing.Size(236, 147);
@@ -164,6 +166,7 @@
             // ThreadsListBox
             // 
             this.ThreadsListBox.FormattingEnabled = true;
+            this.ThreadsListBox.HorizontalScrollbar = true;
             this.ThreadsListBox.Location = new System.Drawing.Point(557, 40);
             this.ThreadsListBox.Name = "ThreadsListBox";
             this.ThreadsListBox.Size = new System.Drawing.Size(276, 238);
