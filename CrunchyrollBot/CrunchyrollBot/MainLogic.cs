@@ -54,6 +54,10 @@ namespace CrunchyrollBot
                         bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
                         delegate (object o, RunWorkerCompletedEventArgs args)
                         {
+                            if (args.Result != null)
+                            {
+                                MainForm.NewError(args.Result.ToString());
+                            }
                             Shows.Remove(NewShow);
                         });
 
@@ -95,7 +99,7 @@ namespace CrunchyrollBot
             }
             catch
             {
-                MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Failed reddit login"));
+                MainForm.NewError("Failed reddit login");
                 return false;
             }
         }

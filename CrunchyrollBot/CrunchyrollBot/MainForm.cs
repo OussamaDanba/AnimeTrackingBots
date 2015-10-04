@@ -50,7 +50,7 @@ namespace CrunchyrollBot
             }
             else if (IsRunning && MainLogic.Shows.Count > 0)
             {
-                ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Not all threads have ended"));
+                NewError("Not all threads have ended");
             }
             else
             {
@@ -92,9 +92,14 @@ namespace CrunchyrollBot
             // Can be overridden by the user when shift is being held.
             if (IsRunning && ModifierKeys != Keys.Shift)
             {
-                ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Stop before closing"));
+                NewError("Stop before closing");
                 e.Cancel = true;
             }
+        }
+
+        public void NewError(string errorMessage)
+        {
+            ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + errorMessage));
         }
 
         public string GetSubreddit()
