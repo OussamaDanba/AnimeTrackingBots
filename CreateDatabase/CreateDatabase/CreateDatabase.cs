@@ -50,23 +50,23 @@ namespace CreateDatabase
                     ShowType        TEXT        PRIMARY KEY NOT NULL);
 
                 CREATE TABLE Shows (
-                    ID              INTEGER     PRIMARY KEY NOT NULL,
+                    Id              INTEGER     PRIMARY KEY NOT NULL,
                     EpisodeCount    REAL,
                     ShowType        TEXT        NOT NULL DEFAULT ('Episode') REFERENCES ShowTypes (ShowType),
                     DisplayedTitle  TEXT        NOT NULL,
                     SourceExists    BOOLEAN     NOT NULL CHECK(SourceExists IN (0, 1)));
 
                 CREATE TABLE Episodes (
-                    ID              INTEGER     NOT NULL REFERENCES Shows (ID),
+                    Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     EpisodeNumber   REAL        NOT NULL,
                     PostURL         TEXT,
-                    PRIMARY KEY (ID, EpisodeNumber));
+                    PRIMARY KEY (Id, EpisodeNumber));
 
                 CREATE TABLE Websites (
                     Website         TEXT        PRIMARY KEY NOT NULL);
 
                 CREATE TABLE Streaming (
-                    ID              INTEGER     NOT NULL REFERENCES Shows (ID),
+                    Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     Website         TEXT        NOT NULL REFERENCES Websites (Website),
                     Source          TEXT        NOT NULL,
                     InternalTitle   TEXT        NOT NULL,
@@ -74,28 +74,28 @@ namespace CreateDatabase
                     Title           TEXT        NOT NULL,
                     InternalOffset  REAL        NOT NULL DEFAULT (0),
                     AKAOffset       REAL        NOT NULL DEFAULT (0),
-                    PRIMARY KEY (ID, Website));
+                    PRIMARY KEY (Id, Website));
 
                 CREATE TABLE Subreddits (
-                    ID              INTEGER     NOT NULL REFERENCES Shows (ID),
+                    Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     Subreddit       TEXT        NOT NULL,
-                    PRIMARY KEY (ID, Subreddit));
+                    PRIMARY KEY (Id, Subreddit));
 
                 CREATE TABLE Keywords (
-                    ID              INTEGER     NOT NULL REFERENCES Shows (ID),
+                    Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     Keyword         TEXT        NOT NULL,
-                    PRIMARY KEY (ID, Keyword));
+                    PRIMARY KEY (Id, Keyword));
 
                 CREATE TABLE Information (
-                    ID              INTEGER     NOT NULL REFERENCES Shows (ID),
+                    Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     Website         TEXT        NOT NULL REFERENCES Websites (Website),
                     Title           TEXT        NOT NULL,
-                    BaseURL         TEXT        NOT NULL,
-                    PRIMARY KEY (ID, Website, Title));
+                    TitleURL        TEXT        NOT NULL,
+                    PRIMARY KEY (Id, Website, Title));
 
                 -- I hate (reddit) OAuth
                 CREATE TABLE User (
-                    ClientID        TEXT        NOT NULL,
+                    ClientId        TEXT        NOT NULL,
                     ClientSecret    TEXT        NOT NULL,
                     RedirectURI     TEXT        NOT NULL,
                     Username        TEXT        NOT NULL,
