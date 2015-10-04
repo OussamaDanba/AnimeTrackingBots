@@ -8,22 +8,22 @@ namespace CrunchyrollBot
 {
     public class MainLogic
     {
-        private MainForm mainForm;
-        public SQLiteConnection currentDB { get; set; }
-        public Timer updateTimer = new Timer();
-        private Reddit reddit;
-        private RedditSharp.Things.Subreddit subreddit;
-        public BindingList<Show> shows;
+        private MainForm MainForm;
+        public SQLiteConnection CurrentDB { get; set; }
+        public Timer UpdateTimer = new Timer();
+        private Reddit Reddit;
+        private RedditSharp.Things.Subreddit Subreddit;
+        public BindingList<Show> Shows;
 
         public MainLogic(MainForm mainForm)
         {
-            this.mainForm = mainForm;
-            shows = new BindingList<Show>();
+            MainForm = mainForm;
+            Shows = new BindingList<Show>();
 
-            updateTimer = new Timer();
+            UpdateTimer = new Timer();
             // Run the TimerEvent once every second
-            updateTimer.Interval = 1000;
-            updateTimer.Tick += new EventHandler(TimerEvent);
+            UpdateTimer.Interval = 1000;
+            UpdateTimer.Tick += new EventHandler(TimerEvent);
         }
 
         private void TimerEvent(object sender, EventArgs e)
@@ -35,39 +35,39 @@ namespace CrunchyrollBot
             }
         }
 
-        public bool redditSetup()
+        public bool RedditSetup()
         {
-            string username = string.Empty;
-            string password = string.Empty;
-            string clientID = string.Empty;
-            string clientSecret = string.Empty;
-            string redirectURI = string.Empty;
+            string Username = string.Empty;
+            string Password = string.Empty;
+            string ClientId = string.Empty;
+            string ClientSecret = string.Empty;
+            string RedirectURI = string.Empty;
 
-            currentDB.Open();
-            SQLiteDataReader redditLogin = new SQLiteCommand(
-                "SELECT * FROM User LIMIT 1", currentDB).ExecuteReader();
+            CurrentDB.Open();
+            SQLiteDataReader RedditLogin = new SQLiteCommand(
+                "SELECT * FROM User LIMIT 1", CurrentDB).ExecuteReader();
 
-            if (redditLogin.Read())
+            if (RedditLogin.Read())
             {
-                clientID = redditLogin[0].ToString();
-                clientSecret = redditLogin[1].ToString();
-                redirectURI = redditLogin[2].ToString();
-                username = redditLogin[3].ToString();
-                password = redditLogin[4].ToString();
+                ClientId = RedditLogin[0].ToString();
+                ClientSecret = RedditLogin[1].ToString();
+                RedirectURI = RedditLogin[2].ToString();
+                Username = RedditLogin[3].ToString();
+                Password = RedditLogin[4].ToString();
             }
-            currentDB.Close();
+            CurrentDB.Close();
 
             try
             {
-                AuthProvider authProvider = new AuthProvider(clientID, clientSecret, redirectURI);
-                reddit = new Reddit(authProvider.GetOAuthToken(username, password));
-                subreddit = reddit.GetSubreddit("/r/" + mainForm.getSubreddit());
+                AuthProvider AuthProvider = new AuthProvider(ClientId, ClientSecret, RedirectURI);
+                Reddit = new Reddit(AuthProvider.GetOAuthToken(Username, Password));
+                Subreddit = Reddit.GetSubreddit("/r/" + MainForm.GetSubreddit());
 
                 return true;
             }
             catch
             {
-                mainForm.errorListBox.Items.Add("Failed reddit login");
+                MainForm.ErrorListBox.Items.Add("Failed reddit login");
                 return false;
             }
         }

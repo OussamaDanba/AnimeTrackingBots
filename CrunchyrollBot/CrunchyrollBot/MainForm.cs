@@ -7,95 +7,95 @@ namespace CrunchyrollBot
 {
     public partial class MainForm : Form
     {
-        private MainLogic mainLogic;
-        private bool isRunning = false;
+        private MainLogic MainLogic;
+        private bool IsRunning = false;
 
         public MainForm()
         {
             InitializeComponent();
-            mainLogic = new MainLogic(this);
-            threadsListBox.DataSource = mainLogic.shows;
+            MainLogic = new MainLogic(this);
+            ThreadsListBox.DataSource = MainLogic.Shows;
         }
 
-        private void chooseDBButton_Click(object sender, EventArgs e)
+        private void ChooseDatabaseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog DBDialog = new OpenFileDialog();
+            OpenFileDialog DatabaseDialog = new OpenFileDialog();
 
             // Allow filtering on .sqlite and all files.
-            DBDialog.Filter = "SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*";
-            DBDialog.FilterIndex = 1;
+            DatabaseDialog.Filter = "SQLite files (*.sqlite)|*.sqlite|All files (*.*)|*.*";
+            DatabaseDialog.FilterIndex = 1;
 
-            if (DBDialog.ShowDialog() == DialogResult.OK)
+            if (DatabaseDialog.ShowDialog() == DialogResult.OK)
             {
-                mainLogic.currentDB = new SQLiteConnection("Data source=" + DBDialog.FileName);
-                chosenDBLabel.Text = DBDialog.SafeFileName;
-                toggleStatusButton.Enabled = !(subredditTextBox.Text == string.Empty);
+                MainLogic.CurrentDB = new SQLiteConnection("Data source=" + DatabaseDialog.FileName);
+                ChosenDatabaseLabel.Text = DatabaseDialog.SafeFileName;
+                ToggleStatusButton.Enabled = !(SubredditTextBox.Text == string.Empty);
             }
             else
             {
-                mainLogic.currentDB = null;
-                chosenDBLabel.Text = "None";
-                toggleStatusButton.Enabled = false;
+                MainLogic.CurrentDB = null;
+                ChosenDatabaseLabel.Text = "None";
+                ToggleStatusButton.Enabled = false;
             }
         }
 
-        private void toggleStatusButton_Click(object sender, EventArgs e)
+        private void ToggleStatusButton_Click(object sender, EventArgs e)
         {
-            if (isRunning)
+            if (IsRunning)
             {
-                mainLogic.currentDB.Close();
-                mainLogic.updateTimer.Stop();
-                isRunning = false;
-                setUIStatus(false);
+                MainLogic.CurrentDB.Close();
+                MainLogic.UpdateTimer.Stop();
+                IsRunning = false;
+                SetUIStatus(false);
             }
             else
             {
-                if(mainLogic.redditSetup())
+                if (MainLogic.RedditSetup())
                 {
-                    mainLogic.currentDB.Open();
-                    mainLogic.updateTimer.Start();
-                    isRunning = true;
-                    setUIStatus(true);
+                    MainLogic.CurrentDB.Open();
+                    MainLogic.UpdateTimer.Start();
+                    IsRunning = true;
+                    SetUIStatus(true);
                 }
             }
         }
 
-        private void setUIStatus(bool locked)
+        private void SetUIStatus(bool locked)
         {
-            subredditTextBox.Enabled = chooseDBButton.Enabled = !locked;
+            SubredditTextBox.Enabled = ChooseDatabaseButton.Enabled = !locked;
             if (locked)
             {
-                statusLabel.Text = "Running";
-                statusLabel.ForeColor = Color.Green;
-                toggleStatusButton.Text = "Stop";
+                StatusLabel.Text = "Running";
+                StatusLabel.ForeColor = Color.Green;
+                ToggleStatusButton.Text = "Stop";
             }
             else
             {
-                statusLabel.Text = "Not running";
-                statusLabel.ForeColor = Color.Red;
-                toggleStatusButton.Text = "Start";
+                StatusLabel.Text = "Not running";
+                StatusLabel.ForeColor = Color.Red;
+                ToggleStatusButton.Text = "Start";
             }
         }
 
-        private void subredditTextBox_TextChanged(object sender, EventArgs e)
+        private void SubredditTextBox_TextChanged(object sender, EventArgs e)
         {
-            toggleStatusButton.Enabled = !(subredditTextBox.Text == string.Empty) && (mainLogic.currentDB != null);
+            ToggleStatusButton.Enabled = !(SubredditTextBox.Text == string.Empty) && (MainLogic.CurrentDB != null);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Don't allow closing the program while it is running to prevent issues when the program is writing to the database.
             // Can be overridden by the user when shift is being held.
-            if(isRunning && ModifierKeys != Keys.Shift)
+            if(IsRunning && ModifierKeys != Keys.Shift)
             {
-                errorListBox.Items.Add("Stop before closing");
+                ErrorListBox.Items.Add("Stop before closing");
                 e.Cancel = true;
             }
         }
 
-        public string getSubreddit()
+        public string GetSubreddit()
         {
-            return subredditTextBox.Text;
+            return SubredditTextBox.Text;
         }
     }
 }

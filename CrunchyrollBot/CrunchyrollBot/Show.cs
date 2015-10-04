@@ -8,40 +8,40 @@ namespace CrunchyrollBot
 {
     public class Show
     {
-        private int ID;
-        private string source, internalTitle, title;
-        private decimal internalOffset, AKAOffset;
+        private int Id;
+        private string Source, InternalTitle, Title;
+        private decimal InternalOffset, AKAOffset;
 
-        public Show(MainLogic mainLogic, int ID, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
+        public Show(MainLogic mainLogic, int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
         {
-            this.ID = ID;
-            this.source = source;
-            this.internalTitle = internalTitle;
-            this.title = title;
-            this.internalOffset = internalOffset;
+            Id = id;
+            Source = source;
+            InternalTitle = internalTitle;
+            Title = title;
+            InternalOffset = internalOffset;
             this.AKAOffset = AKAOffset;
         }
 
         public override string ToString()
         {
-            return title;
+            return Title;
         }
 
         public override bool Equals(object obj)
         {
-            var show = obj as Show;
+            var Show = obj as Show;
             
-            if(show == null)
+            if (Show == null)
             {
                 return false;
             }
 
-            return this.ID == show.ID;
+            return Id == Show.Id;
         }
 
         public override int GetHashCode()
         {
-            return ID;
+            return Id;
         }
     }
 }

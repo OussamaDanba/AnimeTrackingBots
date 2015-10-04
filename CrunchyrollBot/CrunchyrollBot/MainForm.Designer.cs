@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.statusLabel = new System.Windows.Forms.Label();
-            this.toggleStatusButton = new System.Windows.Forms.Button();
+            this.StatusLabel = new System.Windows.Forms.Label();
+            this.ToggleStatusButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.chosenDBLabel = new System.Windows.Forms.Label();
-            this.chooseDBButton = new System.Windows.Forms.Button();
+            this.ChosenDatabaseLabel = new System.Windows.Forms.Label();
+            this.ChooseDatabaseButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.subredditTextBox = new System.Windows.Forms.TextBox();
+            this.SubredditTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.recentListBox = new System.Windows.Forms.ListBox();
+            this.RecentListBox = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.errorListBox = new System.Windows.Forms.ListBox();
-            this.threadsListBox = new System.Windows.Forms.ListBox();
+            this.ErrorListBox = new System.Windows.Forms.ListBox();
+            this.ThreadsListBox = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -54,26 +54,26 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Status:";
             // 
-            // statusLabel
+            // StatusLabel
             // 
-            this.statusLabel.AutoSize = true;
-            this.statusLabel.ForeColor = System.Drawing.Color.Red;
-            this.statusLabel.Location = new System.Drawing.Point(12, 39);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(62, 13);
-            this.statusLabel.TabIndex = 1;
-            this.statusLabel.Text = "Not running";
+            this.StatusLabel.AutoSize = true;
+            this.StatusLabel.ForeColor = System.Drawing.Color.Red;
+            this.StatusLabel.Location = new System.Drawing.Point(12, 39);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(62, 13);
+            this.StatusLabel.TabIndex = 1;
+            this.StatusLabel.Text = "Not running";
             // 
-            // toggleStatusButton
+            // ToggleStatusButton
             // 
-            this.toggleStatusButton.Enabled = false;
-            this.toggleStatusButton.Location = new System.Drawing.Point(12, 69);
-            this.toggleStatusButton.Name = "toggleStatusButton";
-            this.toggleStatusButton.Size = new System.Drawing.Size(120, 25);
-            this.toggleStatusButton.TabIndex = 2;
-            this.toggleStatusButton.Text = "Start";
-            this.toggleStatusButton.UseVisualStyleBackColor = true;
-            this.toggleStatusButton.Click += new System.EventHandler(this.toggleStatusButton_Click);
+            this.ToggleStatusButton.Enabled = false;
+            this.ToggleStatusButton.Location = new System.Drawing.Point(12, 69);
+            this.ToggleStatusButton.Name = "ToggleStatusButton";
+            this.ToggleStatusButton.Size = new System.Drawing.Size(120, 25);
+            this.ToggleStatusButton.TabIndex = 2;
+            this.ToggleStatusButton.Text = "Start";
+            this.ToggleStatusButton.UseVisualStyleBackColor = true;
+            this.ToggleStatusButton.Click += new System.EventHandler(this.ToggleStatusButton_Click);
             // 
             // label2
             // 
@@ -85,25 +85,25 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Current database:";
             // 
-            // chosenDBLabel
+            // ChosenDatabaseLabel
             // 
-            this.chosenDBLabel.AutoSize = true;
-            this.chosenDBLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chosenDBLabel.Location = new System.Drawing.Point(162, 39);
-            this.chosenDBLabel.Name = "chosenDBLabel";
-            this.chosenDBLabel.Size = new System.Drawing.Size(33, 13);
-            this.chosenDBLabel.TabIndex = 4;
-            this.chosenDBLabel.Text = "None";
+            this.ChosenDatabaseLabel.AutoSize = true;
+            this.ChosenDatabaseLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ChosenDatabaseLabel.Location = new System.Drawing.Point(162, 39);
+            this.ChosenDatabaseLabel.Name = "ChosenDatabaseLabel";
+            this.ChosenDatabaseLabel.Size = new System.Drawing.Size(33, 13);
+            this.ChosenDatabaseLabel.TabIndex = 4;
+            this.ChosenDatabaseLabel.Text = "None";
             // 
-            // chooseDBButton
+            // ChooseDatabaseButton
             // 
-            this.chooseDBButton.Location = new System.Drawing.Point(162, 69);
-            this.chooseDBButton.Name = "chooseDBButton";
-            this.chooseDBButton.Size = new System.Drawing.Size(120, 25);
-            this.chooseDBButton.TabIndex = 5;
-            this.chooseDBButton.Text = "Choose database";
-            this.chooseDBButton.UseVisualStyleBackColor = true;
-            this.chooseDBButton.Click += new System.EventHandler(this.chooseDBButton_Click);
+            this.ChooseDatabaseButton.Location = new System.Drawing.Point(162, 69);
+            this.ChooseDatabaseButton.Name = "ChooseDatabaseButton";
+            this.ChooseDatabaseButton.Size = new System.Drawing.Size(120, 25);
+            this.ChooseDatabaseButton.TabIndex = 5;
+            this.ChooseDatabaseButton.Text = "Choose database";
+            this.ChooseDatabaseButton.UseVisualStyleBackColor = true;
+            this.ChooseDatabaseButton.Click += new System.EventHandler(this.ChooseDatabaseButton_Click);
             // 
             // label3
             // 
@@ -115,15 +115,15 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Subreddit:";
             // 
-            // subredditTextBox
+            // SubredditTextBox
             // 
-            this.subredditTextBox.Location = new System.Drawing.Point(315, 39);
-            this.subredditTextBox.MaxLength = 20;
-            this.subredditTextBox.Name = "subredditTextBox";
-            this.subredditTextBox.Size = new System.Drawing.Size(120, 20);
-            this.subredditTextBox.TabIndex = 7;
-            this.subredditTextBox.Text = "anime";
-            this.subredditTextBox.TextChanged += new System.EventHandler(this.subredditTextBox_TextChanged);
+            this.SubredditTextBox.Location = new System.Drawing.Point(315, 39);
+            this.SubredditTextBox.MaxLength = 20;
+            this.SubredditTextBox.Name = "SubredditTextBox";
+            this.SubredditTextBox.Size = new System.Drawing.Size(120, 20);
+            this.SubredditTextBox.TabIndex = 7;
+            this.SubredditTextBox.Text = "anime";
+            this.SubredditTextBox.TextChanged += new System.EventHandler(this.SubredditTextBox_TextChanged);
             // 
             // label4
             // 
@@ -135,13 +135,13 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "Recent:";
             // 
-            // recentListBox
+            // RecentListBox
             // 
-            this.recentListBox.FormattingEnabled = true;
-            this.recentListBox.Location = new System.Drawing.Point(12, 131);
-            this.recentListBox.Name = "recentListBox";
-            this.recentListBox.Size = new System.Drawing.Size(297, 147);
-            this.recentListBox.TabIndex = 9;
+            this.RecentListBox.FormattingEnabled = true;
+            this.RecentListBox.Location = new System.Drawing.Point(12, 131);
+            this.RecentListBox.Name = "RecentListBox";
+            this.RecentListBox.Size = new System.Drawing.Size(297, 147);
+            this.RecentListBox.TabIndex = 9;
             // 
             // label5
             // 
@@ -153,21 +153,21 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "Errors:";
             // 
-            // errorListBox
+            // ErrorListBox
             // 
-            this.errorListBox.FormattingEnabled = true;
-            this.errorListBox.Location = new System.Drawing.Point(315, 131);
-            this.errorListBox.Name = "errorListBox";
-            this.errorListBox.Size = new System.Drawing.Size(120, 147);
-            this.errorListBox.TabIndex = 11;
+            this.ErrorListBox.FormattingEnabled = true;
+            this.ErrorListBox.Location = new System.Drawing.Point(315, 131);
+            this.ErrorListBox.Name = "ErrorListBox";
+            this.ErrorListBox.Size = new System.Drawing.Size(120, 147);
+            this.ErrorListBox.TabIndex = 11;
             // 
-            // threadsListBox
+            // ThreadsListBox
             // 
-            this.threadsListBox.FormattingEnabled = true;
-            this.threadsListBox.Location = new System.Drawing.Point(441, 40);
-            this.threadsListBox.Name = "threadsListBox";
-            this.threadsListBox.Size = new System.Drawing.Size(392, 238);
-            this.threadsListBox.TabIndex = 12;
+            this.ThreadsListBox.FormattingEnabled = true;
+            this.ThreadsListBox.Location = new System.Drawing.Point(441, 40);
+            this.ThreadsListBox.Name = "ThreadsListBox";
+            this.ThreadsListBox.Size = new System.Drawing.Size(392, 238);
+            this.ThreadsListBox.TabIndex = 12;
             // 
             // label6
             // 
@@ -185,18 +185,18 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(845, 290);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.threadsListBox);
-            this.Controls.Add(this.errorListBox);
+            this.Controls.Add(this.ThreadsListBox);
+            this.Controls.Add(this.ErrorListBox);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.recentListBox);
+            this.Controls.Add(this.RecentListBox);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.subredditTextBox);
+            this.Controls.Add(this.SubredditTextBox);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.chooseDBButton);
-            this.Controls.Add(this.chosenDBLabel);
+            this.Controls.Add(this.ChooseDatabaseButton);
+            this.Controls.Add(this.ChosenDatabaseLabel);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.toggleStatusButton);
-            this.Controls.Add(this.statusLabel);
+            this.Controls.Add(this.ToggleStatusButton);
+            this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
@@ -210,19 +210,19 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label statusLabel;
-        private System.Windows.Forms.Button toggleStatusButton;
+        private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.Button ToggleStatusButton;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label chosenDBLabel;
-        private System.Windows.Forms.Button chooseDBButton;
+        private System.Windows.Forms.Label ChosenDatabaseLabel;
+        private System.Windows.Forms.Button ChooseDatabaseButton;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox subredditTextBox;
+        private System.Windows.Forms.TextBox SubredditTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ListBox threadsListBox;
-        public System.Windows.Forms.ListBox recentListBox;
-        public System.Windows.Forms.ListBox errorListBox;
+        private System.Windows.Forms.ListBox ThreadsListBox;
+        public System.Windows.Forms.ListBox RecentListBox;
+        public System.Windows.Forms.ListBox ErrorListBox;
     }
 }
 
