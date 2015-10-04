@@ -41,12 +41,16 @@ namespace CrunchyrollBot
 
         private void ToggleStatusButton_Click(object sender, EventArgs e)
         {
-            if (IsRunning)
+            if (IsRunning && MainLogic.Shows.Count == 0)
             {
                 MainLogic.CurrentDB.Close();
                 MainLogic.UpdateTimer.Stop();
                 IsRunning = false;
                 SetUIStatus(false);
+            }
+            else if (IsRunning && MainLogic.Shows.Count > 0)
+            {
+                ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Not all threads have ended"));
             }
             else
             {
@@ -86,7 +90,7 @@ namespace CrunchyrollBot
         {
             // Don't allow closing the program while it is running to prevent issues when the program is writing to the database.
             // Can be overridden by the user when shift is being held.
-            if(IsRunning && ModifierKeys != Keys.Shift)
+            if (IsRunning && ModifierKeys != Keys.Shift)
             {
                 ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Stop before closing"));
                 e.Cancel = true;
