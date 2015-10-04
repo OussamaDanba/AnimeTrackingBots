@@ -88,7 +88,7 @@ namespace CrunchyrollBot
             // Can be overridden by the user when shift is being held.
             if(IsRunning && ModifierKeys != Keys.Shift)
             {
-                ErrorListBox.Items.Add("Stop before closing");
+                ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + "Stop before closing"));
                 e.Cancel = true;
             }
         }
