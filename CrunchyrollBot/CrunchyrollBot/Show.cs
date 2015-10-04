@@ -12,7 +12,7 @@ namespace CrunchyrollBot
         private string Source, InternalTitle, Title;
         private decimal InternalOffset, AKAOffset;
 
-        public Show(MainLogic mainLogic, int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
+        public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
         {
             Id = id;
             Source = source;
@@ -20,6 +20,11 @@ namespace CrunchyrollBot
             Title = title;
             InternalOffset = internalOffset;
             this.AKAOffset = AKAOffset;
+        }
+
+        public void StartThread()
+        {
+            // Empty for now
         }
 
         public override string ToString()

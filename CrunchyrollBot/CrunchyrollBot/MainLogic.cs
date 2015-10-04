@@ -13,7 +13,7 @@ namespace CrunchyrollBot
         public Timer UpdateTimer = new Timer();
         private Reddit Reddit;
         private RedditSharp.Things.Subreddit Subreddit;
-        public BindingList<Show> Shows;
+        public static BindingList<Show> Shows;
 
         public MainLogic(MainForm mainForm)
         {
@@ -31,7 +31,23 @@ namespace CrunchyrollBot
             // Only update every minute
             if (DateTime.Now.Second == 0)
             {
-                // Empty for now
+                SQLiteDataReader SelectShows = new SQLiteCommand(@"
+                    SELECT Id, Source, InternalTitle, Title, InternalOffset, AKAOffset
+                    FROM Streaming WHERE Website = 'Crunchyroll'
+                    ", CurrentDB).ExecuteReader();
+
+                while (SelectShows.Read())
+                {
+                    Show NewShow = new Show(int.Parse(SelectShows[0].ToString()), SelectShows[1].ToString(),
+                        SelectShows[2].ToString(), SelectShows[3].ToString(),
+                        decimal.Parse(SelectShows[4].ToString()), decimal.Parse(SelectShows[5].ToString()));
+
+                    if (!Shows.Contains(NewShow))
+                    {
+                        Shows.Add(NewShow);
+                        NewShow.StartThread();
+                    }
+                }
             }
         }
 
