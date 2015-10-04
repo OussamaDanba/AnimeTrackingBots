@@ -8,12 +8,12 @@ namespace CreateDatabase
     {
         static void Main(string[] args)
         {
-            string fileName = "database.sqlite";
-            if (!UserConfirmation(fileName))
+            string FileName = "database.sqlite";
+            if (!UserConfirmation(FileName))
                 return;
 
-            SQLiteConnection database = CreateDB(fileName);
-            PopulateDB(database);
+            SQLiteConnection Database = GenerateDatabase(FileName);
+            PopulateDatabase(Database);
         }
 
         static bool UserConfirmation(string fileName)
@@ -23,26 +23,26 @@ namespace CreateDatabase
                 Console.WriteLine("Existing database found.");
                 Console.WriteLine("Overwrite existing database? [Y/N]");
 
-                ConsoleKeyInfo key;
+                ConsoleKeyInfo Key;
                 do
                 {
-                    key = Console.ReadKey();
+                    Key = Console.ReadKey();
 
-                    if (key.Key == ConsoleKey.N)
+                    if (Key.Key == ConsoleKey.N)
                         return false;
                 }
-                while (key.Key != ConsoleKey.Y);
+                while (Key.Key != ConsoleKey.Y);
             }
 
             File.Delete(fileName);
             return true;
         }
 
-        static SQLiteConnection CreateDB(string fileName)
+        static SQLiteConnection GenerateDatabase(string fileName)
         {
             SQLiteConnection.CreateFile(fileName);
-            SQLiteConnection database = new SQLiteConnection("Data source=" + fileName);
-            database.Open();
+            SQLiteConnection Database = new SQLiteConnection("Data source=" + fileName);
+            Database.Open();
 
             // Create database structure
             new SQLiteCommand(@"
@@ -100,31 +100,31 @@ namespace CreateDatabase
                     RedirectURI     TEXT        NOT NULL,
                     Username        TEXT        NOT NULL,
                     Password        TEXT        NOT NULL)
-                ", database).ExecuteNonQuery();
+                ", Database).ExecuteNonQuery();
 
-            database.Close();
-            return database;
+            Database.Close();
+            return Database;
         }
 
         // Populate the database with commonly used entries
-        static void PopulateDB(SQLiteConnection database)
+        static void PopulateDatabase(SQLiteConnection database)
         {
             database.Open();
             
             // Populate the ShowTypes table
-            SQLiteCommand insertShowType = new SQLiteCommand(@"
+            SQLiteCommand InsertShowType = new SQLiteCommand(@"
                 INSERT INTO ShowTypes (ShowType) VALUES (@ShowType)
                 ", database);
 
             string[] ShowTypes = { "Episode", "Movie", "Music", "ONA", "OVA", "Special" };
             foreach (string ShowType in ShowTypes)
             {
-                insertShowType.Parameters.AddWithValue("@ShowType", ShowType);
-                insertShowType.ExecuteNonQuery();
+                InsertShowType.Parameters.AddWithValue("@ShowType", ShowType);
+                InsertShowType.ExecuteNonQuery();
             }
 
             // Populate the Websites table
-            SQLiteCommand insertWebsites = new SQLiteCommand(@"
+            SQLiteCommand InsertWebsites = new SQLiteCommand(@"
                 INSERT INTO Websites (Website) VALUES (@Website)
                 ", database);
 
@@ -132,8 +132,8 @@ namespace CreateDatabase
                 "DAISUKI", "FUNimation", "Hulu", "Hummingbird", "MyAnimeList", "Netflix", "Viewster", "Wakanim"};
             foreach (string Website in Websites)
             {
-                insertWebsites.Parameters.AddWithValue("@Website", Website);
-                insertWebsites.ExecuteNonQuery();
+                InsertWebsites.Parameters.AddWithValue("@Website", Website);
+                InsertWebsites.ExecuteNonQuery();
             }
 
             database.Close();
