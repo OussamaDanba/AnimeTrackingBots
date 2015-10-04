@@ -13,7 +13,7 @@ namespace CrunchyrollBot
         public Timer UpdateTimer = new Timer();
         private Reddit Reddit;
         private RedditSharp.Things.Subreddit Subreddit;
-        public static BindingList<Show> Shows;
+        public BindingList<Show> Shows;
 
         public MainLogic(MainForm mainForm)
         {
@@ -45,7 +45,19 @@ namespace CrunchyrollBot
                     if (!Shows.Contains(NewShow))
                     {
                         Shows.Add(NewShow);
-                        NewShow.StartThread();
+
+                        BackgroundWorker bw = new BackgroundWorker();
+                        bw.DoWork += new DoWorkEventHandler(NewShow.GetShowDataAndPost);
+
+                        // Since the BackgroundWorker is created in this thread the RunWorkerCompleted
+                        // is also run in this thread. This eliminates the possibility of a race condition.
+                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                        delegate (object o, RunWorkerCompletedEventArgs args)
+                        {
+                            Shows.Remove(NewShow);
+                        });
+
+                        bw.RunWorkerAsync();
                     }
                 }
             }

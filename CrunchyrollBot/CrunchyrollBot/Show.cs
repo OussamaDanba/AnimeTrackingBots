@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace CrunchyrollBot
             this.AKAOffset = AKAOffset;
         }
 
-        public void StartThread()
+        public void GetShowDataAndPost(object o, DoWorkEventArgs args)
         {
             // Empty for now
         }
