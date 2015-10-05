@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -8,13 +9,23 @@ using System.Xml.Linq;
 
 namespace CrunchyrollBot
 {
+    public struct Information
+    {
+        public string Website;
+        public string Title;
+        public string BaseURL;
+    };
+
     public class Show
     {
         private const string BASE_URL = "https://crunchyroll.com/";
-        private bool CrunchyrollIsClip;
+        private bool CrunchyrollIsClip, SourceExists;
         private int Id, CrunchyrollDuration;
-        private string Source, InternalTitle, Title, CrunchyrollURL, CrunchyrollSeriesTitle, CrunchyrollEpisodeTitle, CrunchyrollKeywords;
-        private decimal InternalOffset, AKAOffset, CrunchyrollEpisodeNumber;
+        private string Source, InternalTitle, Title, CrunchyrollURL, CrunchyrollSeriesTitle, CrunchyrollEpisodeTitle, CrunchyrollKeywords,
+            ShowType, DisplayedTitle;
+        private decimal InternalOffset, AKAOffset, CrunchyrollEpisodeNumber, EpisodeCount;
+        private List<Information> Informations, Streamings;
+        private List<string> Subreddits, Keywords;
 
         public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
         {
@@ -50,11 +61,94 @@ namespace CrunchyrollBot
                     // Early return since the episode is a preview clip
                     if (CrunchyrollIsClip)
                         return;
+
+                    GetDatabaseData();
                 }
                 else
                 {
                     return;
                 }
+            }
+        }
+
+        private void GetDatabaseData()
+        {
+            // Get data from Information table
+            SQLiteCommand SelectInformationCommand = new SQLiteCommand(@"
+                    SELECT Website, Title, BaseURL
+                    FROM Information WHERE Id = @Id
+                    ", MainLogic.CurrentDB);
+            SelectInformationCommand.Parameters.AddWithValue("@Id", Id);
+            SQLiteDataReader SelectInformation = SelectInformationCommand.ExecuteReader();
+
+            Informations = new List<Information>();
+            while (SelectInformation.Read())
+            {
+                Information Information;
+                Information.Website = SelectInformation[0].ToString();
+                Information.Title = SelectInformation[1].ToString();
+                Information.BaseURL = SelectInformation[2].ToString();
+                Informations.Add(Information);
+            }
+
+            // Get data from Streaming table
+            // This query could be unioned with the previous one but when posting
+            // to reddit there is whitespace in between so we need to be able to distinguish
+            SQLiteCommand SelectStreamingCommand = new SQLiteCommand(@"
+                    SELECT Website, Title, BaseURL
+                    FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
+                    ", MainLogic.CurrentDB);
+            SelectStreamingCommand.Parameters.AddWithValue("@Id", Id);
+            SQLiteDataReader SelectStreaming = SelectStreamingCommand.ExecuteReader();
+
+            Streamings = new List<Information>();
+            while (SelectStreaming.Read())
+            {
+                Information Streaming;
+                Streaming.Website = SelectStreaming[0].ToString();
+                Streaming.Title = SelectStreaming[1].ToString();
+                Streaming.BaseURL = SelectStreaming[2].ToString();
+                Streamings.Add(Streaming);
+            }
+
+            // Get data from Subreddits table
+            SQLiteCommand SelectSubredditsCommand = new SQLiteCommand(@"
+                    SELECT Subreddit
+                    FROM Subreddits WHERE Id = @Id
+                    ", MainLogic.CurrentDB);
+            SelectSubredditsCommand.Parameters.AddWithValue("@Id", Id);
+            SQLiteDataReader SelectSubreddits = SelectSubredditsCommand.ExecuteReader();
+
+            Subreddits = new List<string>();
+            while (SelectSubreddits.Read())
+                Subreddits.Add(SelectSubreddits[0].ToString());
+
+            // Get data from Keywords table
+            SQLiteCommand SelectKeywordsCommand = new SQLiteCommand(@"
+                    SELECT Keyword
+                    FROM Keywords WHERE Id = @Id
+                    ", MainLogic.CurrentDB);
+            SelectKeywordsCommand.Parameters.AddWithValue("@Id", Id);
+            SQLiteDataReader SelectKeywords = SelectKeywordsCommand.ExecuteReader();
+
+            Keywords = new List<string>();
+            while (SelectKeywords.Read())
+                Keywords.Add(SelectKeywords[0].ToString());
+
+            // Get data from Shows table
+            SQLiteCommand SelectShowsCommand = new SQLiteCommand(@"
+                    SELECT EpisodeCount, ShowType, DisplayedTitle, SourceExists
+                    FROM Shows WHERE Id = @Id
+                    ", MainLogic.CurrentDB);
+            SelectShowsCommand.Parameters.AddWithValue("@Id", Id);
+            SQLiteDataReader SelectShows = SelectShowsCommand.ExecuteReader();
+
+            if (SelectShows.Read())
+            {
+                EpisodeCount = decimal.Parse(SelectShows[0].ToString());
+                ShowType = SelectShows[1].ToString();
+                DisplayedTitle = SelectShows[2].ToString();
+                SourceExists = bool.Parse(SelectShows[3].ToString());
             }
         }
 
