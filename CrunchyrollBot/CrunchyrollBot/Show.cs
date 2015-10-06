@@ -50,7 +50,9 @@ namespace CrunchyrollBot
                 args.Result = "Failed connect for " + Title;
                 return;
             }
-            
+
+            GetDatabaseData();
+
             XElement RSS = XElement.Parse(GetRawXml(Feed));
             IEnumerable<XElement> Episodes = RSS.Element("channel").Elements("item");
             foreach (XElement XElement in Episodes.Reverse())
@@ -62,8 +64,6 @@ namespace CrunchyrollBot
                     // Skip this episode if it is a preview clip or if the result is not for the current show
                     if (CrunchyrollIsClip || CrunchyrollSeriesTitle != InternalTitle)
                         continue;
-
-                    GetDatabaseData();
 
                     if (!ApplyOffsetAndCheckValidity())
                         continue;
