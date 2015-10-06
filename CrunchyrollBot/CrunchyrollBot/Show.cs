@@ -63,11 +63,32 @@ namespace CrunchyrollBot
                         continue;
 
                     GetDatabaseData();
+
+                    if (!ApplyOffsetAndCheckValidity())
+                        continue;
                 }
                 else
                 {
                     continue;
                 }
+            }
+        }
+
+        private bool ApplyOffsetAndCheckValidity()
+        {
+            // There is no offset so it does not have to be applied
+            if (InternalOffset == 0)
+            {
+                return true;
+            }
+            else
+            {
+                CrunchyrollEpisodeNumber += InternalOffset;
+                // The episode was actually an episode from a different season so it needs to be skipped
+                if (CrunchyrollEpisodeNumber <= 0)
+                    return false;
+                else
+                    return true;
             }
         }
 
