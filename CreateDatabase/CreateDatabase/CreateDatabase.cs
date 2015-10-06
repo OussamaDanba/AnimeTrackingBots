@@ -41,7 +41,7 @@ namespace CreateDatabase
         static SQLiteConnection GenerateDatabase(string fileName)
         {
             SQLiteConnection.CreateFile(fileName);
-            SQLiteConnection Database = new SQLiteConnection("Data source=" + fileName);
+            SQLiteConnection Database = new SQLiteConnection("Data source=" + fileName + ";Version=3;");
             Database.Open();
 
             // Create database structure
