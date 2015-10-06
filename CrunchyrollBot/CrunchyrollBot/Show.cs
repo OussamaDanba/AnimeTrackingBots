@@ -58,15 +58,15 @@ namespace CrunchyrollBot
                 {
                     ParseCrunchyrollData(XElement);
 
-                    // Early return since the episode is a preview clip
+                    // Skip this episode since it is a preview clip
                     if (CrunchyrollIsClip)
-                        return;
+                        continue;
 
                     GetDatabaseData();
                 }
                 else
                 {
-                    return;
+                    continue;
                 }
             }
         }
