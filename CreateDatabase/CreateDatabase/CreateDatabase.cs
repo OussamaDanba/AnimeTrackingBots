@@ -70,7 +70,7 @@ namespace CreateDatabase
                     Website         TEXT        NOT NULL REFERENCES Websites (Website),
                     Source          TEXT        NOT NULL,
                     InternalTitle   TEXT        NOT NULL,
-                    BaseURL         TEXT        NOT NULL,
+                    TitleURL        TEXT        NOT NULL,
                     Title           TEXT        NOT NULL,
                     InternalOffset  REAL        NOT NULL DEFAULT (0),
                     AKAOffset       REAL        NOT NULL DEFAULT (0),
