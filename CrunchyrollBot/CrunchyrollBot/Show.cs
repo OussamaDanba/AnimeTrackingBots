@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -22,7 +23,7 @@ namespace CrunchyrollBot
         private bool CrunchyrollIsClip, SourceExists;
         private int Id, CrunchyrollDuration;
         private string Source, InternalTitle, Title, CrunchyrollURL, CrunchyrollSeriesTitle, CrunchyrollEpisodeTitle, CrunchyrollKeywords,
-            ShowType, DisplayedTitle;
+            ShowType, DisplayedTitle, PostURL;
         private decimal InternalOffset, AKAOffset, CrunchyrollEpisodeNumber, EpisodeCount;
         private List<Information> Informations, Streamings;
         private List<string> Subreddits, Keywords;
@@ -44,7 +45,7 @@ namespace CrunchyrollBot
             {
                 Feed.Load(BASE_URL + Source);
             }
-            catch (System.Net.WebException)
+            catch
             {
                 args.Result = "Failed connect for " + Title;
                 return;
@@ -58,8 +59,8 @@ namespace CrunchyrollBot
                 {
                     ParseCrunchyrollData(XElement);
 
-                    // Skip this episode since it is a preview clip
-                    if (CrunchyrollIsClip)
+                    // Skip this episode if it is a preview clip or if the result is not for the current show
+                    if (CrunchyrollIsClip || CrunchyrollSeriesTitle != InternalTitle)
                         continue;
 
                     GetDatabaseData();
@@ -69,7 +70,75 @@ namespace CrunchyrollBot
 
                     if (IsNewEpisode())
                     {
+                        // How does posting to reddit work?:
+                        // 1 - Insert the episode into the database without PostURL so that other bots won't post in the meantime
+                        // 2 - Post to reddit
+                        // 3 - If the post failed remove the entry from the database. If it succeeded update PostURL with the URL
+                        try
+                        {
+                            SQLiteCommand InsertEpisodeCommand = new SQLiteCommand(@"
+                                INSERT INTO Episodes VALUES (@Id, @EpisodeNumber, '')
+                                ", MainLogic.CurrentDB);
+                            InsertEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                            InsertEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                            InsertEpisodeCommand.ExecuteNonQuery();
+                        }
+                        catch
+                        {
+                            MainLogic.MainForm.Invoke(new MethodInvoker(delegate ()
+                            {
+                                MainLogic.MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") + 
+                                    "Failed insert in database for " + Title + " episode " + CrunchyrollEpisodeNumber));
+                            }));
+                            continue;
+                        }
 
+                        if (PostOnReddit())
+                        {
+                            try
+                            {
+                                SQLiteCommand UpdateEpisodeCommand = new SQLiteCommand(@"
+                                UPDATE Episodes
+                                SET PostURL = @PostURL
+                                WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
+                                ", MainLogic.CurrentDB);
+                                UpdateEpisodeCommand.Parameters.AddWithValue("@PostURL", PostURL);
+                                UpdateEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                                UpdateEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                                UpdateEpisodeCommand.ExecuteNonQuery();
+                            }
+                            catch
+                            {
+                                MainLogic.MainForm.Invoke(new MethodInvoker(delegate ()
+                                {
+                                    MainLogic.MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") +
+                                        "!ALERT! Failed update in database for " + Title + " episode " + CrunchyrollEpisodeNumber));
+                                }));
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                SQLiteCommand DeleteEpisodeCommand = new SQLiteCommand(@"
+                                DELETE FROM Episodes
+                                WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
+                                ", MainLogic.CurrentDB);
+                                DeleteEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                                DeleteEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                                DeleteEpisodeCommand.ExecuteNonQuery();
+                            }
+                            catch
+                            {
+                                MainLogic.MainForm.Invoke(new MethodInvoker(delegate ()
+                                {
+                                    MainLogic.MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") +
+                                        "!ALERT! Failed delete in database for " + Title + " episode " + CrunchyrollEpisodeNumber));
+                                }));
+                                continue;
+                            }
+                        }
                     }
                 }
                 else
@@ -77,6 +146,12 @@ namespace CrunchyrollBot
                     continue;
                 }
             }
+        }
+
+        private bool PostOnReddit()
+        {
+            PostURL = "test";
+            return true;
         }
 
         private bool IsNewEpisode()
@@ -89,7 +164,7 @@ namespace CrunchyrollBot
                     ", MainLogic.CurrentDB);
             CountEpisodeCommand.Parameters.AddWithValue("@Id", Id);
             CountEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
-            decimal EpisodeCount = (decimal) CountEpisodeCommand.ExecuteScalar();
+            int EpisodeCount = Convert.ToInt32(CountEpisodeCommand.ExecuteScalar());
 
             return EpisodeCount == 0;
         }
@@ -115,6 +190,7 @@ namespace CrunchyrollBot
             SQLiteCommand SelectInformationCommand = new SQLiteCommand(@"
                     SELECT Website, Title, BaseURL
                     FROM Information WHERE Id = @Id
+                    ORDER BY Website ASC
                     ", MainLogic.CurrentDB);
             SelectInformationCommand.Parameters.AddWithValue("@Id", Id);
             SQLiteDataReader SelectInformation = SelectInformationCommand.ExecuteReader();
@@ -135,6 +211,7 @@ namespace CrunchyrollBot
             SQLiteCommand SelectStreamingCommand = new SQLiteCommand(@"
                     SELECT Website, Title, BaseURL
                     FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
+                    ORDER BY Website ASC
                     ", MainLogic.CurrentDB);
             SelectStreamingCommand.Parameters.AddWithValue("@Id", Id);
             SQLiteDataReader SelectStreaming = SelectStreamingCommand.ExecuteReader();
@@ -153,6 +230,7 @@ namespace CrunchyrollBot
             SQLiteCommand SelectSubredditsCommand = new SQLiteCommand(@"
                     SELECT Subreddit
                     FROM Subreddits WHERE Id = @Id
+                    ORDER BY Subreddit ASC
                     ", MainLogic.CurrentDB);
             SelectSubredditsCommand.Parameters.AddWithValue("@Id", Id);
             SQLiteDataReader SelectSubreddits = SelectSubredditsCommand.ExecuteReader();
@@ -201,7 +279,8 @@ namespace CrunchyrollBot
             CrunchyrollDuration = int.Parse(XElement.Element(Crunchyroll + "duration").Value);
             CrunchyrollEpisodeTitle = XElement.Element(Crunchyroll + "episodeTitle").Value;
             CrunchyrollSeriesTitle = XElement.Element(Crunchyroll + "seriesTitle").Value;
-            CrunchyrollKeywords = XElement.Element(Media + "keywords").Value;
+            CrunchyrollKeywords = XElement.Element(Media + "keywords") != null ?
+                XElement.Element(Media + "keywords").Value : string.Empty;
 
             // The episodeNumber does not exist in two cases which we need to account for.
             // 1: The episode is episode 0. (Usually prologue)

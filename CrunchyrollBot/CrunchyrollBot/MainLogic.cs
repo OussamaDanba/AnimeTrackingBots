@@ -8,7 +8,7 @@ namespace CrunchyrollBot
 {
     public class MainLogic
     {
-        private MainForm MainForm;
+        public static MainForm MainForm;
         public static SQLiteConnection CurrentDB { get; set; }
         public Timer UpdateTimer = new Timer();
         private Reddit Reddit;
