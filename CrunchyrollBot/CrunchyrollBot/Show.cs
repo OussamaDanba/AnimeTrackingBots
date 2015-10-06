@@ -66,12 +66,32 @@ namespace CrunchyrollBot
 
                     if (!ApplyOffsetAndCheckValidity())
                         continue;
+
+                    if (IsNewEpisode())
+                    {
+
+                    }
                 }
                 else
                 {
                     continue;
                 }
             }
+        }
+
+        private bool IsNewEpisode()
+        {
+            // Count the amount of rows that has the same episode number. If it is 0 the current episode
+            // is a new entry. (Is there a better way of doing this?)
+            SQLiteCommand CountEpisodeCommand = new SQLiteCommand(@"
+                    SELECT COUNT(*)
+                    FROM Episodes WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
+                    ", MainLogic.CurrentDB);
+            CountEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+            CountEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+            decimal EpisodeCount = (decimal) CountEpisodeCommand.ExecuteScalar();
+
+            return EpisodeCount == 0;
         }
 
         private bool ApplyOffsetAndCheckValidity()
@@ -85,10 +105,7 @@ namespace CrunchyrollBot
             {
                 CrunchyrollEpisodeNumber += InternalOffset;
                 // The episode was actually an episode from a different season so it needs to be skipped
-                if (CrunchyrollEpisodeNumber <= 0)
-                    return false;
-                else
-                    return true;
+                return CrunchyrollEpisodeNumber > 0;
             }
         }
 
