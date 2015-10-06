@@ -14,7 +14,7 @@ namespace CrunchyrollBot
     {
         public string Website;
         public string Title;
-        public string BaseURL;
+        public string TitleURL;
     };
 
     public class Show
@@ -188,7 +188,7 @@ namespace CrunchyrollBot
         {
             // Get data from Information table
             SQLiteCommand SelectInformationCommand = new SQLiteCommand(@"
-                    SELECT Website, Title, BaseURL
+                    SELECT Website, Title, TitleURL
                     FROM Information WHERE Id = @Id
                     ORDER BY Website ASC
                     ", MainLogic.CurrentDB);
@@ -201,7 +201,7 @@ namespace CrunchyrollBot
                 Information Information;
                 Information.Website = SelectInformation[0].ToString();
                 Information.Title = SelectInformation[1].ToString();
-                Information.BaseURL = SelectInformation[2].ToString();
+                Information.TitleURL = SelectInformation[2].ToString();
                 Informations.Add(Information);
             }
 
@@ -209,7 +209,7 @@ namespace CrunchyrollBot
             // This query could be unioned with the previous one but when posting
             // to reddit there is whitespace in between so we need to be able to distinguish
             SQLiteCommand SelectStreamingCommand = new SQLiteCommand(@"
-                    SELECT Website, Title, BaseURL
+                    SELECT Website, Title, TitleURL
                     FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
                     ORDER BY Website ASC
                     ", MainLogic.CurrentDB);
@@ -222,7 +222,7 @@ namespace CrunchyrollBot
                 Information Streaming;
                 Streaming.Website = SelectStreaming[0].ToString();
                 Streaming.Title = SelectStreaming[1].ToString();
-                Streaming.BaseURL = SelectStreaming[2].ToString();
+                Streaming.TitleURL = SelectStreaming[2].ToString();
                 Streamings.Add(Streaming);
             }
 
