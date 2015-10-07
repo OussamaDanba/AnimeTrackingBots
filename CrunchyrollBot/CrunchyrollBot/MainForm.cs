@@ -27,7 +27,8 @@ namespace CrunchyrollBot
 
             if (DatabaseDialog.ShowDialog() == DialogResult.OK)
             {
-                MainLogic.CurrentDB = new SQLiteConnection("Data source=" + DatabaseDialog.FileName + ";Version=3;Pooling=True;Max Pool Size=100;");
+                MainLogic.CurrentDB = new SQLiteConnection("Data source=" + DatabaseDialog.FileName +
+                    ";Version=3;Pooling=True;Max Pool Size=100;Foreign Keys=true");
                 ChosenDatabaseLabel.Text = DatabaseDialog.SafeFileName;
                 ToggleStatusButton.Enabled = !(SubredditTextBox.Text == string.Empty);
             }
