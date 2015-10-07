@@ -31,37 +31,39 @@ namespace CrunchyrollBot
             // Only update every minute
             if (DateTime.Now.Second == 0)
             {
-                SQLiteDataReader SelectShows = new SQLiteCommand(@"
+                string SelectShowsQuery = @"
                     SELECT Id, Source, InternalTitle, Title, InternalOffset, AKAOffset
-                    FROM Streaming WHERE Website = 'Crunchyroll'
-                    ", CurrentDB).ExecuteReader();
-
-                while (SelectShows.Read())
+                    FROM Streaming WHERE Website = 'Crunchyroll'";
+                using (SQLiteCommand SelectShowsCommand = new SQLiteCommand(SelectShowsQuery, CurrentDB))
+                using (SQLiteDataReader SelectShows = SelectShowsCommand.ExecuteReader())
                 {
-                    Show NewShow = new Show(int.Parse(SelectShows[0].ToString()), SelectShows[1].ToString(),
-                        SelectShows[2].ToString(), SelectShows[3].ToString(),
-                        decimal.Parse(SelectShows[4].ToString()), decimal.Parse(SelectShows[5].ToString()));
-
-                    if (!Shows.Contains(NewShow))
+                    while (SelectShows.Read())
                     {
-                        Shows.Add(NewShow);
+                        Show NewShow = new Show(int.Parse(SelectShows[0].ToString()), SelectShows[1].ToString(),
+                            SelectShows[2].ToString(), SelectShows[3].ToString(),
+                            decimal.Parse(SelectShows[4].ToString()), decimal.Parse(SelectShows[5].ToString()));
 
-                        BackgroundWorker bw = new BackgroundWorker();
-                        bw.DoWork += new DoWorkEventHandler(NewShow.GetShowDataAndPost);
-
-                        // Since the BackgroundWorker is created in this thread the RunWorkerCompleted
-                        // is also run in this thread. This eliminates the possibility of a race condition.
-                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
-                        delegate (object o, RunWorkerCompletedEventArgs args)
+                        if (!Shows.Contains(NewShow))
                         {
-                            if (args.Result != null)
-                            {
-                                MainForm.NewError(args.Result.ToString());
-                            }
-                            Shows.Remove(NewShow);
-                        });
+                            Shows.Add(NewShow);
 
-                        bw.RunWorkerAsync();
+                            BackgroundWorker bw = new BackgroundWorker();
+                            bw.DoWork += new DoWorkEventHandler(NewShow.GetShowDataAndPost);
+
+                            // Since the BackgroundWorker is created in this thread the RunWorkerCompleted
+                            // is also run in this thread. This eliminates the possibility of a race condition.
+                            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                            delegate (object o, RunWorkerCompletedEventArgs args)
+                            {
+                                if (args.Result != null)
+                                {
+                                    MainForm.NewError(args.Result.ToString());
+                                }
+                                Shows.Remove(NewShow);
+                            });
+
+                            bw.RunWorkerAsync();
+                        }
                     }
                 }
             }
@@ -75,19 +77,23 @@ namespace CrunchyrollBot
             string ClientSecret = string.Empty;
             string RedirectURI = string.Empty;
 
-            CurrentDB.Open();
-            SQLiteDataReader RedditLogin = new SQLiteCommand(
-                "SELECT * FROM User LIMIT 1", CurrentDB).ExecuteReader();
-
-            if (RedditLogin.Read())
+            string RedditLoginQuery = "SELECT * FROM User LIMIT 1";
+            using (SQLiteCommand RedditLoginCommand = new SQLiteCommand(RedditLoginQuery, CurrentDB))
             {
-                ClientId = RedditLogin[0].ToString();
-                ClientSecret = RedditLogin[1].ToString();
-                RedirectURI = RedditLogin[2].ToString();
-                Username = RedditLogin[3].ToString();
-                Password = RedditLogin[4].ToString();
+                CurrentDB.Open();
+                using (SQLiteDataReader RedditLogin = RedditLoginCommand.ExecuteReader())
+                {
+                    if (RedditLogin.Read())
+                    {
+                        ClientId = RedditLogin[0].ToString();
+                        ClientSecret = RedditLogin[1].ToString();
+                        RedirectURI = RedditLogin[2].ToString();
+                        Username = RedditLogin[3].ToString();
+                        Password = RedditLogin[4].ToString();
+                    }
+                }
+                CurrentDB.Close();
             }
-            CurrentDB.Close();
 
             try
             {

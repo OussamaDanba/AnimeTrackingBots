@@ -76,12 +76,14 @@ namespace CrunchyrollBot
                         // 3 - If the post failed remove the entry from the database. If it succeeded update PostURL with the URL
                         try
                         {
-                            SQLiteCommand InsertEpisodeCommand = new SQLiteCommand(@"
-                                INSERT INTO Episodes VALUES (@Id, @EpisodeNumber, '')
-                                ", MainLogic.CurrentDB);
-                            InsertEpisodeCommand.Parameters.AddWithValue("@Id", Id);
-                            InsertEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
-                            InsertEpisodeCommand.ExecuteNonQuery();
+                            string InsertEpisodeQuery = @"
+                                INSERT INTO Episodes VALUES (@Id, @EpisodeNumber, '')";
+                            using (SQLiteCommand InsertEpisodeCommand = new SQLiteCommand(InsertEpisodeQuery, MainLogic.CurrentDB))
+                            {
+                                InsertEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                                InsertEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                                InsertEpisodeCommand.ExecuteNonQuery();
+                            }
                         }
                         catch
                         {
@@ -97,15 +99,17 @@ namespace CrunchyrollBot
                         {
                             try
                             {
-                                SQLiteCommand UpdateEpisodeCommand = new SQLiteCommand(@"
-                                UPDATE Episodes
-                                SET PostURL = @PostURL
-                                WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
-                                ", MainLogic.CurrentDB);
-                                UpdateEpisodeCommand.Parameters.AddWithValue("@PostURL", PostURL);
-                                UpdateEpisodeCommand.Parameters.AddWithValue("@Id", Id);
-                                UpdateEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
-                                UpdateEpisodeCommand.ExecuteNonQuery();
+                                string UpdateEpisodeQuery = @"
+                                    UPDATE Episodes
+                                    SET PostURL = @PostURL
+                                    WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber";
+                                using (SQLiteCommand UpdateEpisodeCommand = new SQLiteCommand(UpdateEpisodeQuery, MainLogic.CurrentDB))
+                                {
+                                    UpdateEpisodeCommand.Parameters.AddWithValue("@PostURL", PostURL);
+                                    UpdateEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                                    UpdateEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                                    UpdateEpisodeCommand.ExecuteNonQuery();
+                                }
                             }
                             catch
                             {
@@ -121,13 +125,15 @@ namespace CrunchyrollBot
                         {
                             try
                             {
-                                SQLiteCommand DeleteEpisodeCommand = new SQLiteCommand(@"
-                                DELETE FROM Episodes
-                                WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
-                                ", MainLogic.CurrentDB);
-                                DeleteEpisodeCommand.Parameters.AddWithValue("@Id", Id);
-                                DeleteEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
-                                DeleteEpisodeCommand.ExecuteNonQuery();
+                                string DeleteEpisodeQuery = @"
+                                    DELETE FROM Episodes
+                                    WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber";
+                                using (SQLiteCommand DeleteEpisodeCommand = new SQLiteCommand(DeleteEpisodeQuery, MainLogic.CurrentDB))
+                                {
+                                    DeleteEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                                    DeleteEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                                    DeleteEpisodeCommand.ExecuteNonQuery();
+                                }
                             }
                             catch
                             {
@@ -158,15 +164,17 @@ namespace CrunchyrollBot
         {
             // Count the amount of rows that has the same episode number. If it is 0 the current episode
             // is a new entry. (Is there a better way of doing this?)
-            SQLiteCommand CountEpisodeCommand = new SQLiteCommand(@"
-                    SELECT COUNT(*)
-                    FROM Episodes WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber
-                    ", MainLogic.CurrentDB);
-            CountEpisodeCommand.Parameters.AddWithValue("@Id", Id);
-            CountEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
-            int EpisodeCount = Convert.ToInt32(CountEpisodeCommand.ExecuteScalar());
+            string CountEpisodeQuery = @"
+                SELECT COUNT(*)
+                FROM Episodes WHERE Id = @Id AND EpisodeNumber = @EpisodeNumber";
+            using (SQLiteCommand CountEpisodeCommand = new SQLiteCommand(CountEpisodeQuery, MainLogic.CurrentDB))
+            {
+                CountEpisodeCommand.Parameters.AddWithValue("@Id", Id);
+                CountEpisodeCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                int EpisodeCount = Convert.ToInt32(CountEpisodeCommand.ExecuteScalar());
 
-            return EpisodeCount == 0;
+                return EpisodeCount == 0;
+            }
         }
 
         private bool ApplyOffsetAndCheckValidity()
@@ -187,84 +195,99 @@ namespace CrunchyrollBot
         private void GetDatabaseData()
         {
             // Get data from Information table
-            SQLiteCommand SelectInformationCommand = new SQLiteCommand(@"
-                    SELECT Website, Title, TitleURL
-                    FROM Information WHERE Id = @Id
-                    ORDER BY Website ASC
-                    ", MainLogic.CurrentDB);
-            SelectInformationCommand.Parameters.AddWithValue("@Id", Id);
-            SQLiteDataReader SelectInformation = SelectInformationCommand.ExecuteReader();
-
-            Informations = new List<Information>();
-            while (SelectInformation.Read())
+            string SelectInformationQuery = @"
+                SELECT Website, Title, TitleURL
+                FROM Information WHERE Id = @Id
+                ORDER BY Website ASC";
+            using (SQLiteCommand SelectInformationCommand = new SQLiteCommand(SelectInformationQuery, MainLogic.CurrentDB))
             {
-                Information Information;
-                Information.Website = SelectInformation[0].ToString();
-                Information.Title = SelectInformation[1].ToString();
-                Information.TitleURL = SelectInformation[2].ToString();
-                Informations.Add(Information);
+                SelectInformationCommand.Parameters.AddWithValue("@Id", Id);
+                using (SQLiteDataReader SelectInformation = SelectInformationCommand.ExecuteReader())
+                {
+                    Informations = new List<Information>();
+                    while (SelectInformation.Read())
+                    {
+                        Information Information;
+                        Information.Website = SelectInformation[0].ToString();
+                        Information.Title = SelectInformation[1].ToString();
+                        Information.TitleURL = SelectInformation[2].ToString();
+                        Informations.Add(Information);
+                    }
+                }
             }
 
             // Get data from Streaming table
             // This query could be unioned with the previous one but when posting
             // to reddit there is whitespace in between so we need to be able to distinguish
-            SQLiteCommand SelectStreamingCommand = new SQLiteCommand(@"
-                    SELECT Website, Title, TitleURL
-                    FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
-                    ORDER BY Website ASC
-                    ", MainLogic.CurrentDB);
-            SelectStreamingCommand.Parameters.AddWithValue("@Id", Id);
-            SQLiteDataReader SelectStreaming = SelectStreamingCommand.ExecuteReader();
-
-            Streamings = new List<Information>();
-            while (SelectStreaming.Read())
+            string SelectStreamingQuery = @"
+                SELECT Website, Title, TitleURL
+                FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
+                ORDER BY Website ASC";
+            using (SQLiteCommand SelectStreamingCommand = new SQLiteCommand(SelectStreamingQuery, MainLogic.CurrentDB))
             {
-                Information Streaming;
-                Streaming.Website = SelectStreaming[0].ToString();
-                Streaming.Title = SelectStreaming[1].ToString();
-                Streaming.TitleURL = SelectStreaming[2].ToString();
-                Streamings.Add(Streaming);
+                SelectStreamingCommand.Parameters.AddWithValue("@Id", Id);
+                using (SQLiteDataReader SelectStreaming = SelectStreamingCommand.ExecuteReader())
+                {
+                    Streamings = new List<Information>();
+                    while (SelectStreaming.Read())
+                    {
+                        Information Streaming;
+                        Streaming.Website = SelectStreaming[0].ToString();
+                        Streaming.Title = SelectStreaming[1].ToString();
+                        Streaming.TitleURL = SelectStreaming[2].ToString();
+                        Streamings.Add(Streaming);
+                    }
+                }
             }
 
             // Get data from Subreddits table
-            SQLiteCommand SelectSubredditsCommand = new SQLiteCommand(@"
-                    SELECT Subreddit
-                    FROM Subreddits WHERE Id = @Id
-                    ORDER BY Subreddit ASC
-                    ", MainLogic.CurrentDB);
-            SelectSubredditsCommand.Parameters.AddWithValue("@Id", Id);
-            SQLiteDataReader SelectSubreddits = SelectSubredditsCommand.ExecuteReader();
-
-            Subreddits = new List<string>();
-            while (SelectSubreddits.Read())
-                Subreddits.Add(SelectSubreddits[0].ToString());
+            string SelectSubredditQuery = @"
+                SELECT Subreddit
+                FROM Subreddits WHERE Id = @Id
+                ORDER BY Subreddit ASC";
+            using (SQLiteCommand SelectSubredditsCommand = new SQLiteCommand(SelectSubredditQuery, MainLogic.CurrentDB))
+            {
+                SelectSubredditsCommand.Parameters.AddWithValue("@Id", Id);
+                using (SQLiteDataReader SelectSubreddits = SelectSubredditsCommand.ExecuteReader())
+                {
+                    Subreddits = new List<string>();
+                    while (SelectSubreddits.Read())
+                        Subreddits.Add(SelectSubreddits[0].ToString());
+                }
+            }
 
             // Get data from Keywords table
-            SQLiteCommand SelectKeywordsCommand = new SQLiteCommand(@"
-                    SELECT Keyword
-                    FROM Keywords WHERE Id = @Id
-                    ", MainLogic.CurrentDB);
-            SelectKeywordsCommand.Parameters.AddWithValue("@Id", Id);
-            SQLiteDataReader SelectKeywords = SelectKeywordsCommand.ExecuteReader();
-
-            Keywords = new List<string>();
-            while (SelectKeywords.Read())
-                Keywords.Add(SelectKeywords[0].ToString());
+            string SelectKeywordsQuery = @"
+                SELECT Keyword
+                FROM Keywords WHERE Id = @Id";
+            using (SQLiteCommand SelectKeywordsCommand = new SQLiteCommand(SelectKeywordsQuery, MainLogic.CurrentDB))
+            {
+                SelectKeywordsCommand.Parameters.AddWithValue("@Id", Id);
+                using (SQLiteDataReader SelectKeywords = SelectKeywordsCommand.ExecuteReader())
+                {
+                    Keywords = new List<string>();
+                    while (SelectKeywords.Read())
+                        Keywords.Add(SelectKeywords[0].ToString());
+                }
+            }
 
             // Get data from Shows table
-            SQLiteCommand SelectShowsCommand = new SQLiteCommand(@"
-                    SELECT EpisodeCount, ShowType, DisplayedTitle, SourceExists
-                    FROM Shows WHERE Id = @Id
-                    ", MainLogic.CurrentDB);
-            SelectShowsCommand.Parameters.AddWithValue("@Id", Id);
-            SQLiteDataReader SelectShows = SelectShowsCommand.ExecuteReader();
-
-            if (SelectShows.Read())
+            string SelectShowsQuery = @"
+                SELECT EpisodeCount, ShowType, DisplayedTitle, SourceExists
+                FROM Shows WHERE Id = @Id";
+            using (SQLiteCommand SelectShowsCommand = new SQLiteCommand(SelectShowsQuery, MainLogic.CurrentDB))
             {
-                EpisodeCount = decimal.Parse(SelectShows[0].ToString());
-                ShowType = SelectShows[1].ToString();
-                DisplayedTitle = SelectShows[2].ToString();
-                SourceExists = bool.Parse(SelectShows[3].ToString());
+                SelectShowsCommand.Parameters.AddWithValue("@Id", Id);
+                using (SQLiteDataReader SelectShows = SelectShowsCommand.ExecuteReader())
+                {
+                    if (SelectShows.Read())
+                    {
+                        EpisodeCount = decimal.Parse(SelectShows[0].ToString());
+                        ShowType = SelectShows[1].ToString();
+                        DisplayedTitle = SelectShows[2].ToString();
+                        SourceExists = bool.Parse(SelectShows[3].ToString());
+                    }
+                }
             }
         }
 
