@@ -12,7 +12,7 @@ namespace CrunchyrollBot
         public static SQLiteConnection CurrentDB { get; set; }
         public Timer UpdateTimer = new Timer();
         private Reddit Reddit;
-        private RedditSharp.Things.Subreddit Subreddit;
+        public static RedditSharp.Things.Subreddit Subreddit;
         public BindingList<Show> Shows;
 
         public MainLogic(MainForm mainForm)
