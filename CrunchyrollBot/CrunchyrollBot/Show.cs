@@ -251,7 +251,7 @@ namespace CrunchyrollBot
                 // Insert line section divider
                 PostBody += "\n\n---\n\n";
 
-                PostBody += @"**Reminder:** Please do not discuss any plot points which haven't appeared in the anime yet.
+                PostBody += @"**Reminder:**  \nPlease do not discuss any plot points which haven't appeared in the anime yet.
                     Try not to confirm or deny any theories, encourage people to read the source material instead.
                     Minor spoilers are generally ok but should be tagged accordingly.
                     Failing to comply with the rules may result in your comment being removed.";
