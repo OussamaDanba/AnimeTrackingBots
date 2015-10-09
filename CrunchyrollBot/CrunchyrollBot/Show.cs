@@ -29,6 +29,7 @@ namespace CrunchyrollBot
         private decimal? EpisodeCount;
         private List<Information> Informations, Streamings;
         private List<string> Subreddits, Keywords;
+        private const int AmountOfColumns = 3, AmountOfRows = 13, EntriesPerTable = AmountOfColumns * AmountOfRows;
 
         public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset)
         {
@@ -243,18 +244,18 @@ namespace CrunchyrollBot
             }
 
             // Insert previous episodes table if it's not empty
-            // TODO: Implement
+            PostBody += GenerateTable();
 
             // Display spoiler warning when source material exists
             if (SourceExists)
             {
                 // Insert line section divider
                 PostBody += "\n\n---\n\n";
-
-                PostBody += @"**Reminder:**  \nPlease do not discuss any plot points which haven't appeared in the anime yet.
-                    Try not to confirm or deny any theories, encourage people to read the source material instead.
-                    Minor spoilers are generally ok but should be tagged accordingly.
-                    Failing to comply with the rules may result in your comment being removed.";
+                
+                PostBody += "**Reminder:**  \nPlease do not discuss any plot points which haven't appeared in the anime yet."
+                    + "Try not to confirm or deny any theories, encourage people to read the source material instead."
+                    + "Minor spoilers are generally ok but should be tagged accordingly."
+                    + "Failing to comply with the rules may result in your comment being removed.";
             }
 
             if (CrunchyrollKeywords != string.Empty || Keywords.Any())
@@ -285,6 +286,51 @@ namespace CrunchyrollBot
             PostBody += "This post is made by a bot. Any feedback is welcome and can be sent to /u/Shadoxfix.";
 
             return Tuple.Create(PostTitle, PostBody);
+        }
+
+        private string GenerateTable()
+        {
+            string Table = "\n\n---\n\n**Previous Episodes:**";
+            List<Tuple<decimal, string>> PreviousEpisodes = new List<Tuple<decimal, string>>();
+
+            // Get data from Episodes table
+            string SelectEpisodesQuery = @"
+                SELECT EpisodeNumber, PostURL
+                FROM Episodes WHERE Id = @Id AND EpisodeNumber < @EpisodeNumber
+                ORDER BY EpisodeNumber ASC";
+            using (SQLiteCommand SelectEpisodesCommand = new SQLiteCommand(SelectEpisodesQuery, MainLogic.CurrentDB))
+            {
+                SelectEpisodesCommand.Parameters.AddWithValue("@Id", Id);
+                SelectEpisodesCommand.Parameters.AddWithValue("@EpisodeNumber", CrunchyrollEpisodeNumber);
+                using (SQLiteDataReader SelectEpisodes = SelectEpisodesCommand.ExecuteReader())
+                {
+                    while (SelectEpisodes.Read())
+                        PreviousEpisodes.Add(Tuple.Create(decimal.Parse(SelectEpisodes[0].ToString()), SelectEpisodes[1].ToString()));
+                }
+            }
+
+            int AmountOfPreviousEpisodes = PreviousEpisodes.Count;
+
+            if (AmountOfPreviousEpisodes == 0)
+                return string.Empty;
+
+            for (int TableNumber = 0; TableNumber < AmountOfPreviousEpisodes / EntriesPerTable + 1; TableNumber++)
+            {
+                // Calculate the amount of columns needed for the current table. Doesn't exceed the max amount of rows
+                int AmountOfColumnsRequired = (int) Math.Ceiling(
+                    (double) Math.Min(AmountOfPreviousEpisodes - TableNumber * EntriesPerTable, EntriesPerTable) / (double) AmountOfRows);
+
+                // This happens when an episode is the start of a new table. This could be omitted as it wouldn't result
+                // in a noticeable difference but it prevents a few whitespaces in the post source.
+                if (AmountOfColumnsRequired == 0)
+                    break;
+
+                Table += "\n\n";
+
+                Table += AmountOfColumnsRequired;
+            }
+
+            return Table;
         }
 
         private string SecondsToMinutes(int totalSeconds)
