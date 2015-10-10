@@ -327,7 +327,34 @@ namespace CrunchyrollBot
 
                 Table += "\n\n";
 
-                Table += AmountOfColumnsRequired;
+                // Add table header
+                for (int Column = 0; Column < AmountOfColumnsRequired; Column++)
+                    Table += "|**Episode**|**Reddit Link**";
+
+                Table += "\n";
+
+                // Add table layout specifiers
+                for (int Column = 0; Column < AmountOfColumnsRequired; Column++)
+                    Table += "|:--|:-:";
+
+                // Add table information
+                for (int Row = 0; Row < AmountOfRows; Row++)
+                {
+                    Table += "\n";
+
+                    for (int Column = 0; Column < AmountOfColumnsRequired; Column++)
+                    {
+                        // This method works by not caring about the fact we're accessing
+                        // indexes outside the list range. A simple try catch that does nothing
+                        // means the program can continue and is completely expected.
+                        try
+                        {
+                            Table += "|Episode " + PreviousEpisodes[TableNumber * EntriesPerTable + Column * AmountOfRows + Row].Item1
+                                + "|[Link](" + PreviousEpisodes[TableNumber * EntriesPerTable + Column * AmountOfRows + Row].Item2 + ")";
+                        }
+                        catch (ArgumentOutOfRangeException) { }
+                    }
+                }
             }
 
             return Table;
