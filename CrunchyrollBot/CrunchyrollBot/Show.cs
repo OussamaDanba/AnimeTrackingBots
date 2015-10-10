@@ -420,7 +420,7 @@ namespace CrunchyrollBot
 
         private bool ApplyOffsetAndCheckValidity()
         {
-            // There is no offset so it does not have to be applied
+            // There is no offset so it does not have to be applied or checked
             if (InternalOffset == 0)
             {
                 return true;
@@ -428,7 +428,7 @@ namespace CrunchyrollBot
             else
             {
                 CrunchyrollEpisodeNumber += InternalOffset;
-                // The episode was actually an episode from a different season so it needs to be skipped
+                // The episode is actually from this season and shouldn't be skipped
                 return CrunchyrollEpisodeNumber > 0;
             }
         }
