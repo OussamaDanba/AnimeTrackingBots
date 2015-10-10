@@ -65,6 +65,7 @@ namespace CreateDatabase
                 CREATE TABLE Websites (
                     Website         TEXT        PRIMARY KEY NOT NULL);
 
+                -- Some streaming sites have a slightly different way of doing things thus we introduce a Wildcard column
                 CREATE TABLE Streaming (
                     Id              INTEGER     NOT NULL REFERENCES Shows (Id),
                     Website         TEXT        NOT NULL REFERENCES Websites (Website),
@@ -74,6 +75,7 @@ namespace CreateDatabase
                     Title           TEXT        NOT NULL,
                     InternalOffset  REAL        NOT NULL DEFAULT (0),
                     AKAOffset       REAL        NOT NULL DEFAULT (0),
+                    Wildcard        TEXT,
                     PRIMARY KEY (Id, Website));
 
                 CREATE TABLE Subreddits (
