@@ -213,8 +213,8 @@ namespace CrunchyrollBot
                 PostBody += "**Information:**  \n";
                 foreach (Information Information in Informations)
                 {
-                    PostBody += "**" + Regex.Escape(Information.Website) + ":** [" + Regex.Escape(Information.Title)
-                        + "](" + Regex.Escape(Information.TitleURL).Replace("http://", "https://") + ")  \n";
+                    PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
+                        + "](" + EscapeString(Information.TitleURL).Replace("http://", "https://") + ")  \n";
                 }
             }
 
@@ -224,12 +224,12 @@ namespace CrunchyrollBot
 
             PostBody += "**Streaming:**  \n";
             // Add Crunchyroll link
-            PostBody += "**Crunchyroll:** [" + Regex.Escape(Title)
-                    + "](" + Regex.Escape(CrunchyrollURL).Replace("http://", "https://") + ")  \n";
+            PostBody += "**Crunchyroll:** [" + EscapeString(Title)
+                    + "](" + EscapeString(CrunchyrollURL).Replace("http://", "https://") + ")  \n";
             foreach (Information Streaming in Streamings)
             {
-                PostBody += "**" + Regex.Escape(Streaming.Website) + ":** [" + Regex.Escape(Streaming.Title)
-                    + "](" + Regex.Escape(Streaming.TitleURL).Replace("http://", "https://") + ")  \n";
+                PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
+                    + "](" + EscapeString(Streaming.TitleURL).Replace("http://", "https://") + ")  \n";
             }
 
             // Display subreddits section if it's not empty
@@ -359,6 +359,17 @@ namespace CrunchyrollBot
             }
 
             return Table;
+        }
+
+        // Escapes { (, ), [, ] } so that it doesn't interfere with reddit formatting
+        private string EscapeString(string fullString)
+        {
+            fullString = fullString.Replace("(", "\\(");
+            fullString = fullString.Replace(")", "\\)");
+            fullString = fullString.Replace("[", "\\[");
+            fullString = fullString.Replace("]", "\\]");
+
+            return fullString;
         }
 
         private string SecondsToMinutes(int totalSeconds)
