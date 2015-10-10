@@ -115,7 +115,7 @@ namespace CrunchyrollBot
 
                                     MainLogic.MainForm.Invoke(new MethodInvoker(delegate ()
                                     {
-                                        MainLogic.MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") +
+                                        MainLogic.MainForm.RecentListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") +
                                             "Successful post for " + Title + " episode " + CrunchyrollEpisodeNumber + " (" + PostURL + ')'));
                                     }));
                                 }
