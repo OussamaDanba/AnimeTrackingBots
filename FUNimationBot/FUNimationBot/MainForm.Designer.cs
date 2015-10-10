@@ -78,6 +78,7 @@
             this.ToggleStatusButton.TabIndex = 2;
             this.ToggleStatusButton.Text = "Start";
             this.ToggleStatusButton.UseVisualStyleBackColor = true;
+            this.ToggleStatusButton.Click += new System.EventHandler(this.ToggleStatusButton_Click);
             // 
             // label2
             // 
@@ -107,6 +108,7 @@
             this.ChooseDatabaseButton.TabIndex = 5;
             this.ChooseDatabaseButton.Text = "Choose database";
             this.ChooseDatabaseButton.UseVisualStyleBackColor = true;
+            this.ChooseDatabaseButton.Click += new System.EventHandler(this.ChooseDatabaseButton_Click);
             // 
             // label3
             // 
@@ -126,6 +128,7 @@
             this.SubredditTextBox.Size = new System.Drawing.Size(120, 20);
             this.SubredditTextBox.TabIndex = 7;
             this.SubredditTextBox.Text = "anime";
+            this.SubredditTextBox.TextChanged += new System.EventHandler(this.SubredditTextBox_TextChanged);
             // 
             // label4
             // 
@@ -258,6 +261,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "FUNimationBot";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
