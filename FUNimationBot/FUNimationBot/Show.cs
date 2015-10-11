@@ -238,7 +238,7 @@ namespace FUNimationBot
             PostBody += "**Streaming:**  \n";
             // Add FUNimation link
             PostBody += "**FUNimation:** [" + EscapeString(Title)
-                    + "](" + FUNimationURL + ")  \n";
+                    + "](" + EscapeString(FUNimationURL) + ")  \n";
             foreach (Information Streaming in Streamings)
             {
                 PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
