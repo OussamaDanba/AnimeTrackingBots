@@ -63,7 +63,8 @@ namespace CreateDatabase
                     PRIMARY KEY (Id, EpisodeNumber));
 
                 CREATE TABLE Websites (
-                    Website         TEXT        PRIMARY KEY NOT NULL);
+                    Website         TEXT        PRIMARY KEY NOT NULL,
+                    HTTPSSupport    BOOLEAN     NOT NULL DEFAULT (0) CHECK(HTTPSSupport IN (0, 1)));
 
                 -- Some streaming sites have a slightly different way of doing things thus we introduce a Wildcard column
                 CREATE TABLE Streaming (
