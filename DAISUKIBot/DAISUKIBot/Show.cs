@@ -242,7 +242,7 @@ namespace DAISUKIBot
             PostBody += "**Streaming:**  \n";
             // Add DAISUKI link
             PostBody += "**DAISUKI:** [" + EscapeString(Title)
-                    + "](" + EscapeString(DAISUKIURL).Replace("http://", "https://") + ")  \n";
+                    + "](" + EscapeString(DAISUKIURL) + ")  \n";
             foreach (Information Streaming in Streamings)
             {
                 PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
