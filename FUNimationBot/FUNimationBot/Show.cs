@@ -254,9 +254,16 @@ namespace FUNimationBot
                 // Insert section divider
                 PostBody += "\n";
 
-                PostBody += "**Subreddits:**\n\n";
-                foreach (string Subreddit in Subreddits)
-                    PostBody += "* /r/" + Subreddit + "\n";
+                if (Subreddits.Count == 1)
+                {
+                    PostBody += "**Subreddit:** /r/" + Subreddits[0] + "\n";
+                }
+                else
+                {
+                    PostBody += "**Subreddits:**\n\n";
+                    foreach (string Subreddit in Subreddits)
+                        PostBody += "* /r/" + Subreddit + "\n";
+                }
             }
 
             // Insert previous episodes table if it's not empty
