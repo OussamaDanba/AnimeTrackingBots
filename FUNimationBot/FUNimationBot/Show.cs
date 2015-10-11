@@ -27,6 +27,7 @@ namespace FUNimationBot
         private decimal? EpisodeCount, FUNimationEpisodeNumber;
         private List<Information> Informations, Streamings;
         private List<string> Subreddits, Keywords;
+        private Dictionary<string, bool> Websites;
         private const int AmountOfColumns = 3, AmountOfRows = 13, EntriesPerTable = AmountOfColumns * AmountOfRows;
 
         public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset, string wildcard)
@@ -230,7 +231,7 @@ namespace FUNimationBot
                 foreach (Information Information in Informations)
                 {
                     PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
-                        + "](" + EscapeString(Information.TitleURL).Replace("http://", "https://") + ")  \n";
+                        + "](" + ReplaceProtocol(EscapeString(Information.TitleURL), Information.Website) + ")  \n";
                 }
             }
 
@@ -241,11 +242,11 @@ namespace FUNimationBot
             PostBody += "**Streaming:**  \n";
             // Add FUNimation link
             PostBody += "**FUNimation:** [" + EscapeString(Title)
-                    + "](" + EscapeString(FUNimationURL).Replace("http://", "https://") + ")  \n";
+                    + "](" + FUNimationURL + ")  \n";
             foreach (Information Streaming in Streamings)
             {
                 PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
-                    + "](" + EscapeString(Streaming.TitleURL).Replace("http://", "https://") + ")  \n";
+                    + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
             }
 
             // Display subreddits section if it's not empty
@@ -374,6 +375,15 @@ namespace FUNimationBot
             }
 
             return Table;
+        }
+
+        // Replaces the http:// by https:// or inversed based on whether the website supports HTTPS or not
+        private string ReplaceProtocol(string URL, string website)
+        {
+            if (Websites[website])
+                return URL.Replace("http://", "https://");
+            else
+                return URL.Replace("https://", "http://");
         }
 
         // Escapes { (, ), [, ] } so that it doesn't interfere with reddit formatting
@@ -530,6 +540,22 @@ namespace FUNimationBot
                         ShowType = SelectShows[1].ToString();
                         DisplayedTitle = SelectShows[2].ToString();
                         SourceExists = bool.Parse(SelectShows[3].ToString());
+                    }
+                }
+            }
+
+            // Get data from Websites table
+            string SelectWebsiteQuery = @"
+                SELECT *
+                FROM Websites";
+            using (SQLiteCommand SelectWebsitesCommand = new SQLiteCommand(SelectWebsiteQuery, MainLogic.CurrentDB))
+            {
+                using (SQLiteDataReader SelectWebsites = SelectWebsitesCommand.ExecuteReader())
+                {
+                    Websites = new Dictionary<string, bool>();
+                    while (SelectWebsites.Read())
+                    {
+                        Websites.Add(SelectWebsites[0].ToString(), bool.Parse(SelectWebsites[1].ToString()));
                     }
                 }
             }
