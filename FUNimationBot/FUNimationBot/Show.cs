@@ -173,10 +173,6 @@ namespace FUNimationBot
                         }
                     }
                 }
-                else
-                {
-                    continue;
-                }
             }
         }
 
