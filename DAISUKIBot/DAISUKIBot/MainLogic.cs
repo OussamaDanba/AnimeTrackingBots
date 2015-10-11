@@ -3,6 +3,7 @@ using System.Data.SQLite;
 using RedditSharp;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Net;
 
 namespace DAISUKIBot
 {
@@ -10,6 +11,7 @@ namespace DAISUKIBot
     {
         public static MainForm MainForm;
         public static SQLiteConnection CurrentDB { get; set; }
+        public static WebProxy WebProxy;
         public Timer UpdateTimer = new Timer();
         private Reddit Reddit;
         public static RedditSharp.Things.Subreddit Subreddit;

@@ -42,6 +42,11 @@
             this.ErrorListBox = new System.Windows.Forms.ListBox();
             this.ThreadsListBox = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.IPAddressTextBox = new System.Windows.Forms.TextBox();
+            this.PortTextBox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -167,26 +172,77 @@
             // 
             this.ThreadsListBox.FormattingEnabled = true;
             this.ThreadsListBox.HorizontalScrollbar = true;
-            this.ThreadsListBox.Location = new System.Drawing.Point(557, 40);
+            this.ThreadsListBox.Location = new System.Drawing.Point(557, 92);
             this.ThreadsListBox.Name = "ThreadsListBox";
-            this.ThreadsListBox.Size = new System.Drawing.Size(276, 238);
+            this.ThreadsListBox.Size = new System.Drawing.Size(276, 186);
             this.ThreadsListBox.TabIndex = 12;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(554, 21);
+            this.label6.Location = new System.Drawing.Point(554, 73);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(96, 16);
             this.label6.TabIndex = 13;
             this.label6.Text = "Active threads:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(554, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(45, 16);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Proxy:";
+            // 
+            // IPAddressTextBox
+            // 
+            this.IPAddressTextBox.Location = new System.Drawing.Point(557, 39);
+            this.IPAddressTextBox.MaxLength = 20;
+            this.IPAddressTextBox.Name = "IPAddressTextBox";
+            this.IPAddressTextBox.Size = new System.Drawing.Size(120, 20);
+            this.IPAddressTextBox.TabIndex = 15;
+            // 
+            // PortTextBox
+            // 
+            this.PortTextBox.Location = new System.Drawing.Point(683, 39);
+            this.PortTextBox.MaxLength = 20;
+            this.PortTextBox.Name = "PortTextBox";
+            this.PortTextBox.Size = new System.Drawing.Size(120, 20);
+            this.PortTextBox.TabIndex = 16;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label8.Location = new System.Drawing.Point(554, 25);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 13);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "IP Address";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label9.Location = new System.Drawing.Point(680, 25);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(26, 13);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "Port";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(845, 290);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.PortTextBox);
+            this.Controls.Add(this.IPAddressTextBox);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.ThreadsListBox);
             this.Controls.Add(this.ErrorListBox);
@@ -227,6 +283,11 @@
         private System.Windows.Forms.ListBox ThreadsListBox;
         public System.Windows.Forms.ListBox RecentListBox;
         public System.Windows.Forms.ListBox ErrorListBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox IPAddressTextBox;
+        private System.Windows.Forms.TextBox PortTextBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
 

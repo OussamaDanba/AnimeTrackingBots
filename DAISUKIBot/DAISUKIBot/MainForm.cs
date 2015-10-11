@@ -48,6 +48,7 @@ namespace DAISUKIBot
                 MainLogic.UpdateTimer.Stop();
                 IsRunning = false;
                 SetUIStatus(false);
+                MainLogic.WebProxy = null;
             }
             else if (IsRunning && MainLogic.Shows.Count > 0)
             {
@@ -61,6 +62,8 @@ namespace DAISUKIBot
                     MainLogic.UpdateTimer.Start();
                     IsRunning = true;
                     SetUIStatus(true);
+                    if (IPAddressTextBox.Text != string.Empty && PortTextBox.Text != string.Empty)
+                        MainLogic.WebProxy = new System.Net.WebProxy(IPAddressTextBox.Text + ':' + PortTextBox.Text);
                 }
             }
         }
@@ -68,6 +71,8 @@ namespace DAISUKIBot
         private void SetUIStatus(bool locked)
         {
             SubredditTextBox.Enabled = ChooseDatabaseButton.Enabled = !locked;
+            IPAddressTextBox.Enabled = PortTextBox.Enabled = !locked;
+
             if (locked)
             {
                 StatusLabel.Text = "Running";
