@@ -21,7 +21,7 @@ namespace DAISUKIBot
         private const string BASE_URL = "https://www.daisuki.net/";
         private bool SourceExists;
         private int Id;
-        private string Source, InternalTitle, Title, Wildcard, DAISUKISeriesTitle, ShowType, DisplayedTitle, DAISUKIURL, PostURL;
+        private string Source, InternalTitle, Title, DAISUKISeriesTitle, ShowType, DisplayedTitle, DAISUKIURL, PostURL;
         private decimal InternalOffset, AKAOffset;
         private decimal? EpisodeCount, DAISUKIEpisodeNumber;
         private List<Information> Informations, Streamings;
@@ -29,7 +29,7 @@ namespace DAISUKIBot
         private Dictionary<string, bool> Websites;
         private const int AmountOfColumns = 3, AmountOfRows = 13, EntriesPerTable = AmountOfColumns * AmountOfRows;
 
-        public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset, string wildcard)
+        public Show(int id, string source, string internalTitle, string title, decimal internalOffset, decimal AKAOffset, string titleURL)
         {
             Id = id;
             Source = source;
@@ -37,8 +37,8 @@ namespace DAISUKIBot
             Title = title;
             InternalOffset = internalOffset;
             this.AKAOffset = AKAOffset;
-            // The Wildcard for the DAISUKIBot is the base URL for streaming links.
-            Wildcard = wildcard;
+            // Direct links to the episode are different per region so we use a link to the show overview page
+            DAISUKIURL = titleURL;
         }
 
         public void GetShowDataAndPost(object o, DoWorkEventArgs args)
@@ -546,8 +546,6 @@ namespace DAISUKIBot
 
         private void ParseDAISUKIData(XElement XElement)
         {
-            DAISUKIURL = Wildcard.Replace("http://", "https://") + XElement.Element("hash").Value;
-
             decimal dummy;
             if (decimal.TryParse(XElement.Element("chapter").Value, out dummy))
                 DAISUKIEpisodeNumber = decimal.Parse(XElement.Element("chapter").Value);

@@ -34,7 +34,7 @@ namespace DAISUKIBot
             if (DateTime.Now.Second == 0)
             {
                 string SelectShowsQuery = @"
-                    SELECT Id, Source, InternalTitle, Title, InternalOffset, AKAOffset, Wildcard
+                    SELECT Id, Source, InternalTitle, Title, InternalOffset, AKAOffset, TitleURL
                     FROM Streaming WHERE Website = 'DAISUKI'";
                 using (SQLiteCommand SelectShowsCommand = new SQLiteCommand(SelectShowsQuery, CurrentDB))
                 using (SQLiteDataReader SelectShows = SelectShowsCommand.ExecuteReader())
