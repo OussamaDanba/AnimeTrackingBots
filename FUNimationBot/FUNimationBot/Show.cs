@@ -471,7 +471,7 @@ namespace FUNimationBot
             // to reddit there is whitespace in between so we need to be able to distinguish
             string SelectStreamingQuery = @"
                 SELECT Website, Title, TitleURL
-                FROM Streaming WHERE Id = @Id AND Website != 'FUNimation'
+                FROM Streaming WHERE Id = @Id AND Website != 'FUNimation' AND Website != 'MyAnimeList'
                 ORDER BY Website ASC";
             using (SQLiteCommand SelectStreamingCommand = new SQLiteCommand(SelectStreamingQuery, MainLogic.CurrentDB))
             {

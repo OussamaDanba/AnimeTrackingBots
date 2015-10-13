@@ -479,7 +479,7 @@ namespace CrunchyrollBot
             // to reddit there is whitespace in between so we need to be able to distinguish
             string SelectStreamingQuery = @"
                 SELECT Website, Title, TitleURL
-                FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll'
+                FROM Streaming WHERE Id = @Id AND Website != 'Crunchyroll' AND Website != 'MyAnimeList'
                 ORDER BY Website ASC";
             using (SQLiteCommand SelectStreamingCommand = new SQLiteCommand(SelectStreamingQuery, MainLogic.CurrentDB))
             {
