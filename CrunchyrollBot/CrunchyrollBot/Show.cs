@@ -62,7 +62,8 @@ namespace CrunchyrollBot
             {
                 if (DateTime.Now >= DateTime.Parse(XElement.Element("pubDate").Value).ToLocalTime())
                 {
-                    ParseCrunchyrollData(XElement);
+                    if (!ParseCrunchyrollData(XElement))
+                        continue;
 
                     // Skip this episode if it is a preview clip or if the result is not for the current show
                     if (CrunchyrollIsClip || CrunchyrollSeriesTitle != InternalTitle)
@@ -565,7 +566,7 @@ namespace CrunchyrollBot
             }
         }
 
-        private void ParseCrunchyrollData(XElement XElement)
+        private bool ParseCrunchyrollData(XElement XElement)
         {
             XNamespace Media = "http://search.yahoo.com/mrss/";
             XNamespace Crunchyroll = "http://www.crunchyroll.com/rss";
@@ -587,7 +588,9 @@ namespace CrunchyrollBot
             if (XElement.Element(Crunchyroll + "episodeNumber") == null)
                 CrunchyrollEpisodeNumber = 0;
             else
-                CrunchyrollEpisodeNumber = decimal.Parse(XElement.Element(Crunchyroll + "episodeNumber").Value);
+                return decimal.TryParse(XElement.Element(Crunchyroll + "episodeNumber").Value, out CrunchyrollEpisodeNumber);
+
+            return true;
         }
 
         private string GetRawXml(XmlDocument xmlDocument)
