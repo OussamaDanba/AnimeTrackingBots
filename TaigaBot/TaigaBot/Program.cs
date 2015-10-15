@@ -36,7 +36,8 @@ namespace TaigaBot
                 return;
 
             Title = args[0];
-            MyAnimeListEpisodeNumber = decimal.Parse(args[1]);
+            if (!decimal.TryParse(args[1], out MyAnimeListEpisodeNumber))
+                return;
 
             string DatabaseLocation;
             try
@@ -57,7 +58,7 @@ namespace TaigaBot
 
             GetDatabaseData();
 
-            if (!ApplyOffsetAndCheckValidity())
+            if (!ApplyOffsetAndCheckValidity() || Id == 0)
             {
                 CurrentDB.Close();
                 return;
