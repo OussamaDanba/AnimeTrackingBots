@@ -158,6 +158,12 @@ namespace DAISUKIBot
                     }
                     else
                     {
+                        MainLogic.MainForm.Invoke(new MethodInvoker(delegate ()
+                        {
+                            MainLogic.MainForm.ErrorListBox.Items.Insert(0, (DateTime.Now.ToString("HH:mm:ss: ") +
+                                "Failed reddit post for " + Title + " episode " + DAISUKIEpisodeNumber));
+                        }));
+
                         try
                         {
                             string DeleteEpisodeQuery = @"
