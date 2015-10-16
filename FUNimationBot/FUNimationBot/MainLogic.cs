@@ -31,7 +31,7 @@ namespace FUNimationBot
         private void TimerEvent(object sender, EventArgs e)
         {
             // Only update every minute
-            if (DateTime.Now.Second == 0)
+            if (DateTime.Now.Second % 20 == 0)
             {
                 string SelectShowsQuery = @"
                     SELECT Id, Source, InternalTitle, Title, InternalOffset, AKAOffset, Wildcard
