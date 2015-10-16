@@ -76,9 +76,6 @@ namespace DAISUKIBot
         {
             string Username = string.Empty;
             string Password = string.Empty;
-            string ClientId = string.Empty;
-            string ClientSecret = string.Empty;
-            string RedirectURI = string.Empty;
 
             string RedditLoginQuery = "SELECT * FROM User LIMIT 1";
             using (SQLiteCommand RedditLoginCommand = new SQLiteCommand(RedditLoginQuery, CurrentDB))
@@ -88,11 +85,8 @@ namespace DAISUKIBot
                 {
                     if (RedditLogin.Read())
                     {
-                        ClientId = RedditLogin[0].ToString();
-                        ClientSecret = RedditLogin[1].ToString();
-                        RedirectURI = RedditLogin[2].ToString();
-                        Username = RedditLogin[3].ToString();
-                        Password = RedditLogin[4].ToString();
+                        Username = RedditLogin[0].ToString();
+                        Password = RedditLogin[1].ToString();
                     }
                 }
                 CurrentDB.Close();
@@ -100,8 +94,7 @@ namespace DAISUKIBot
 
             try
             {
-                AuthProvider AuthProvider = new AuthProvider(ClientId, ClientSecret, RedirectURI);
-                Reddit = new Reddit(AuthProvider.GetOAuthToken(Username, Password));
+                Reddit = new Reddit(Username, Password, true);
                 Subreddit = Reddit.GetSubreddit("/r/" + MainForm.GetSubreddit());
 
                 return true;

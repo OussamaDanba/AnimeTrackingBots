@@ -98,9 +98,6 @@ namespace CreateDatabase
 
                 -- I hate (reddit) OAuth
                 CREATE TABLE User (
-                    ClientId        TEXT        NOT NULL,
-                    ClientSecret    TEXT        NOT NULL,
-                    RedirectURI     TEXT        NOT NULL,
                     Username        TEXT        NOT NULL,
                     Password        TEXT        NOT NULL)
                 ", Database).ExecuteNonQuery();
