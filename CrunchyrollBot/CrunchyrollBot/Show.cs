@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -43,20 +44,28 @@ namespace CrunchyrollBot
 
         public void GetShowDataAndPost(object o, DoWorkEventArgs args)
         {
-            XmlDocument Feed = new XmlDocument();
-            try
+            string XML = string.Empty;
+            using (WebClient WebClient = new WebClient())
             {
-                Feed.Load(BASE_URL + Source);
-            }
-            catch
-            {
-                args.Result = "Failed connect for " + Title;
-                return;
+                WebClient.Headers.Add("Cache-Control", "no-cache");
+
+                try
+                {
+                    XML = WebClient.DownloadString(BASE_URL + Source);
+                }
+                catch (WebException)
+                {
+                    args.Result = "Failed connect for " + Title;
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(XML))
+                    return;
             }
 
             GetDatabaseData();
 
-            XElement RSS = XElement.Parse(GetRawXml(Feed));
+            XElement RSS = XElement.Parse(XML);
             IEnumerable<XElement> Episodes = RSS.Element("channel").Elements("item");
             foreach (XElement XElement in Episodes.Reverse())
             {
@@ -591,17 +600,6 @@ namespace CrunchyrollBot
                 return decimal.TryParse(XElement.Element(Crunchyroll + "episodeNumber").Value, out CrunchyrollEpisodeNumber);
 
             return true;
-        }
-
-        private string GetRawXml(XmlDocument xmlDocument)
-        {
-            using (StringWriter StringWriter = new StringWriter())
-            using (XmlWriter XmlWriter = XmlWriter.Create(StringWriter))
-            {
-                xmlDocument.WriteTo(XmlWriter);
-                XmlWriter.Flush();
-                return StringWriter.GetStringBuilder().ToString();
-            }
         }
 
         public override string ToString()
