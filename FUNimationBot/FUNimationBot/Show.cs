@@ -217,20 +217,6 @@ namespace FUNimationBot
             if (FUNimationDuration != 0)
                 PostBody += "**Episode duration:** " + SecondsToMinutes(FUNimationDuration) + '\n';
 
-            // Display information section if it's not empty
-            if (Informations.Any())
-            {
-                // Insert section divider
-                PostBody += "\n";
-
-                PostBody += "**Information:**  \n";
-                foreach (Information Information in Informations)
-                {
-                    PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
-                        + "](" + ReplaceProtocol(EscapeString(Information.TitleURL), Information.Website) + ")  \n";
-                }
-            }
-
             // Always show streaming section since the FUNimation link will always be available at this point
             // Insert section divider
             PostBody += "\n";
@@ -243,6 +229,20 @@ namespace FUNimationBot
             {
                 PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
                     + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
+            }
+
+            // Display information section if it's not empty
+            if (Informations.Any())
+            {
+                // Insert section divider
+                PostBody += "\n";
+
+                PostBody += "**Information:**  \n";
+                foreach (Information Information in Informations)
+                {
+                    PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
+                        + "](" + ReplaceProtocol(EscapeString(Information.TitleURL), Information.Website) + ")  \n";
+                }
             }
 
             // Display subreddits section if it's not empty

@@ -157,6 +157,19 @@ namespace TaigaBot
             if (AKAOffset != 0)
                 PostBody += "**Also known as:** " + ShowType + ' ' + (MyAnimeListEpisodeNumber + AKAOffset) + "\n\n";
 
+            if (Streamings.Any())
+            {
+                // Insert section divider
+                PostBody += "\n";
+
+                PostBody += "**Streaming:**  \n";
+                foreach (Information Streaming in Streamings)
+                {
+                    PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
+                        + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
+                }
+            }
+
             // Display information section if it's not empty
             if (Informations.Any())
             {
@@ -168,19 +181,6 @@ namespace TaigaBot
                 {
                     PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
                         + "](" + ReplaceProtocol(EscapeString(Information.TitleURL), Information.Website) + ")  \n";
-                }
-            }
-
-            if (Streamings.Any())
-            {
-                // Insert section divider
-                PostBody += "\n";
-
-                PostBody += "**Streaming:**  \n";
-                foreach (Information Streaming in Streamings)
-                {
-                    PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
-                        + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
                 }
             }
 

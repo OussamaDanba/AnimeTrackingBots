@@ -221,6 +221,17 @@ namespace DAISUKIBot
             if (AKAOffset != 0)
                 PostBody += "**Also known as:** " + ShowType + ' ' + (DAISUKIEpisodeNumber + AKAOffset) + "\n\n";
 
+            // Always show streaming section since the DAISUKI link will always be available at this point
+            PostBody += "**Streaming:**  \n";
+            // Add DAISUKI link
+            PostBody += "**DAISUKI:** [" + EscapeString(Title)
+                    + "](" + EscapeString(DAISUKIURL) + ")  \n";
+            foreach (Information Streaming in Streamings)
+            {
+                PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
+                    + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
+            }
+
             // Display information section if it's not empty
             if (Informations.Any())
             {
@@ -233,20 +244,6 @@ namespace DAISUKIBot
                     PostBody += "**" + EscapeString(Information.Website) + ":** [" + EscapeString(Information.Title)
                         + "](" + ReplaceProtocol(EscapeString(Information.TitleURL), Information.Website) + ")  \n";
                 }
-            }
-
-            // Always show streaming section since the DAISUKI link will always be available at this point
-            // Insert section divider
-            PostBody += "\n";
-
-            PostBody += "**Streaming:**  \n";
-            // Add DAISUKI link
-            PostBody += "**DAISUKI:** [" + EscapeString(Title)
-                    + "](" + EscapeString(DAISUKIURL) + ")  \n";
-            foreach (Information Streaming in Streamings)
-            {
-                PostBody += "**" + EscapeString(Streaming.Website) + ":** [" + EscapeString(Streaming.Title)
-                    + "](" + ReplaceProtocol(EscapeString(Streaming.TitleURL), Streaming.Website) + ")  \n";
             }
 
             // Display subreddits section if it's not empty
