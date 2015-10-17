@@ -42,7 +42,7 @@ namespace TaigaBot
             string DatabaseLocation;
             try
             {
-                using (StreamReader Reader = new StreamReader("data.txt"))
+                using (StreamReader Reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "data.txt"))
                 {
                     DatabaseLocation = Reader.ReadLine();
                     SubredditName = Reader.ReadLine();
