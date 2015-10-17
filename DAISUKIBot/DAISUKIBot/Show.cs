@@ -437,8 +437,10 @@ namespace DAISUKIBot
             // Get data from Information table
             string SelectInformationQuery = @"
                 SELECT Website, Title, TitleURL
-                FROM Information WHERE Id = @Id
-                ORDER BY Website ASC";
+                FROM Information WHERE Id = @Id AND Website = 'MyAnimeList'
+                UNION ALL
+                SELECT Website, Title, TitleURL
+                FROM Information WHERE Id = @Id AND Website != 'MyAnimeList'";
             using (SQLiteCommand SelectInformationCommand = new SQLiteCommand(SelectInformationQuery, MainLogic.CurrentDB))
             {
                 SelectInformationCommand.Parameters.AddWithValue("@Id", Id);
