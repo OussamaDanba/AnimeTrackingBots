@@ -369,7 +369,7 @@ namespace DAISUKIBot
                         // means the program can continue and is completely expected.
                         try
                         {
-                            Table += "|Episode " + PreviousEpisodes[TableNumber * EntriesPerTable + Column * AmountOfRows + Row].Item1
+                            Table += "|" + ShowType + " " + PreviousEpisodes[TableNumber * EntriesPerTable + Column * AmountOfRows + Row].Item1
                                 + "|[Link](" + PreviousEpisodes[TableNumber * EntriesPerTable + Column * AmountOfRows + Row].Item2 + ")";
                         }
                         catch (ArgumentOutOfRangeException) { }
