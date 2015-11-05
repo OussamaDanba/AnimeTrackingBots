@@ -129,7 +129,7 @@ namespace CreateDatabase
                 ", database);
 
             string[] Websites = { "AniDB", "AniList", "Anime News Network", "Anime-Planet", "AnimeLab", "Crunchyroll",
-                "DAISUKI", "FUNimation", "Hulu", "Hummingbird", "MyAnimeList", "Netflix", "Viewster", "Wakanim"};
+                "DAISUKI", "FUNimation", "Hulu", "Hummingbird", "MyAnimeList", "Netflix", "Viewster", "Wakanim", "Wikipedia"};
             foreach (string Website in Websites)
             {
                 InsertWebsites.Parameters.AddWithValue("@Website", Website);
