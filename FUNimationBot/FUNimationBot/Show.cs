@@ -300,10 +300,6 @@ namespace FUNimationBot
                 PostBody = PostBody.TrimEnd(new char[] { ',', ' ' });
             }
 
-            // Display hardcoded footer message
-            PostBody += "\n\n---\n\n";
-            PostBody += "This post is made by a bot. Any feedback is welcome and can be sent to /u/Shadoxfix.";
-
             return Tuple.Create(PostTitle, PostBody);
         }
 
