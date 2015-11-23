@@ -67,7 +67,17 @@ namespace DAISUKIBot
 
             GetDatabaseData();
 
-            XElement RSS = XElement.Parse(XML);
+            XElement RSS;
+            try
+            {
+                RSS = XElement.Parse(XML);
+            }
+            catch (System.Xml.XmlException)
+            {
+                args.Result = "Failed XML parse for " + Title;
+                return;
+            }
+            
             DAISUKISeriesTitle = RSS.Element("abstruct").Element("title").Value;
             List<XElement> Episodes = new List<XElement>();
 
