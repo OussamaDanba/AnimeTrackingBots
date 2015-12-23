@@ -34,7 +34,7 @@ subreddit to post to on the second line.
 
 What are the episode offsets in the database?
 Sometimes sites use different numbering schemes than desired and the episode offsets help you deal with them.
-If a show is one episode 13 because a site continues its numbering and you'd like to start over from episode 1
+If a show is on episode 13 because a site continues its numbering and you'd like to start over from episode 1
 you'd set InternalOffset to -12.0 for that specific entry. If you still want to display a message that it is also known
 as episode 13 you'd also enter 12.0 in the AKAOffset cell.
 
@@ -47,5 +47,5 @@ bug as mentioned earlier. Using OAuth2 instead of plain username + password does
 * When stopping the bot the next start attempt may give you a "Failed reddit login" error. Once again, this can safely be ignored. Pressing start again will work fine.
 
 Pro tip:  
-If you need to force close the bot or force it to stop hold shift before attempting to do so. It will override the safety measures put in place. Keep in mind that recent data may be corrupted
+If you need to force close the bot hold shift before attempting to do so. It will override the safety measures put in place. Keep in mind that recent data may be corrupted
 as a result and should be double checked.
