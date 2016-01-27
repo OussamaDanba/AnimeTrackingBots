@@ -18,7 +18,7 @@ namespace DAISUKIBot
 
     public class Show
     {
-        private const string BASE_URL = "https://www.daisuki.net/";
+        private const string API_URL = "https://motto.daisuki.net/";
         private bool SourceExists;
         private int Id;
         private string Source, InternalTitle, Title, DAISUKISeriesTitle, ShowType, DisplayedTitle, DAISUKIURL, PostURL;
@@ -52,7 +52,7 @@ namespace DAISUKIBot
 
                 try
                 {
-                    XML = WebClient.DownloadString(BASE_URL + "api2/seriesdetail/" + Source);
+                    XML = WebClient.DownloadString(API_URL + "api2/seriesdetail/" + Source);
                 }
                 catch (WebException)
                 {
