@@ -24,8 +24,8 @@ Useful API links:
 * Crunchyroll 1: http://crunchyroll.com/SHOW_DIRECTORY.rss (http://crunchyroll.com/the-kawai-complex-guide-to-manors-and-hostel-behavior.rss for example).
 * Crunchyroll 2: Sometimes shows do not have a rss feed or an outdated one (18+ shows and shows with multiple seasons for example). Use http://crunchyroll.com/rss/anime instead.
 Be aware that it is delayed by a few minutes and should only be used as a last resort since it contains much more information than you usually need for one show causing the bot to take longer.
-* DAISUKI 1: https://www.daisuki.net/api2/search/mode:1 for a list of all shows in the region. (Be aware that the "www." is necessary.)
-* DAISUKI 2: https://www.daisuki.net/api2/seriesdetail/SHOW_ID for data on a specific show. (Be aware that the "www." is necessary.)
+* DAISUKI 1: https://motto.daisuki.net/api2/search/mode:1 for a list of all shows in the region.
+* DAISUKI 2: https://motto.daisuki.net/api2/seriesdetail/SHOW_ID for data on a specific show.
 
 The Taiga bot relies on two arguments being given when run. These arguments are given by a modified version of Taiga found [here](https://github.com/Shadoxfix/taiga).
 There is a [feature request](https://github.com/erengy/taiga/issues/95) to make this a default option but is currently not implemented.
